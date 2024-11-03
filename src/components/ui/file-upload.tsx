@@ -48,7 +48,7 @@ export const FileUpload = ({ onChange }: { onChange?: (files: File[]) => void; }
         e.preventDefault();
 
         console.log("hello");
-        const acceptedFileTypes = ['image/jpeg', 'image/png', 'application/pdf']; // Example accepted types
+        const acceptedFileTypes = ['image/jpeg', 'image/png', 'application/pdf']; 
         const maxFileSize = 5 * 1024 * 1024; // 5MB limit
 
         const validFiles = newFiles.filter(file => {
@@ -65,7 +65,7 @@ export const FileUpload = ({ onChange }: { onChange?: (files: File[]) => void; }
 
         if (validFiles.length === 0) {
             console.warn("No valid files to upload.");
-            return; // Exit if no valid files
+            return; 
         }
 
 
@@ -81,7 +81,7 @@ export const FileUpload = ({ onChange }: { onChange?: (files: File[]) => void; }
             const uniqueFileName = `public/${timestamp}_${file.name}`
             console.log("into the files");
 
-            // Upload to Supabase storage
+            // Upload ho gya upabase storage pe
             const { data, error: uploadError } = await supabase.storage
                 .from('uploads')
                 .upload(`${uniqueFileName}`, file);
@@ -92,7 +92,7 @@ export const FileUpload = ({ onChange }: { onChange?: (files: File[]) => void; }
 
             if (uploadError) {
                 console.error('Error uploading file:', uploadError.message);
-                continue; // Skip to the next file on error
+                continue; 
             }
 
             console.log('File Uploaded Successfully', data);
