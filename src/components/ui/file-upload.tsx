@@ -77,6 +77,8 @@ export const FileUpload = ({ onChange }: { onChange?: (files: File[]) => void; }
 
         for (const file of newFiles) {
 
+            
+
             const timestamp = Date.now();
             const uniqueFileName = `public/${timestamp}_${file.name}`
             console.log("into the files");

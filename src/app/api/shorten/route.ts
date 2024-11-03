@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export default async function handler(req : NextRequest) {
+export async function POST(req : NextRequest) {
     console.log(req.method);
     
     if (req.method === 'POST') {
