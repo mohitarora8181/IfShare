@@ -1,3 +1,5 @@
+'use client'
+
 import React from 'react';
 import { PinContainer } from '../components/ui/3d-pin';
 import { FileUpload } from '../components/ui/file-upload';
@@ -8,7 +10,8 @@ const HomePage = () => {
     <div className="w-full bg-black flex flex-col items-center justify-center text-white h-screen">
       <div className='w-full h-1/2'>
       <div>
-      <FileUpload />
+      <FileUpload onChange={(file) => console.log('File Selected' , file)
+      } />
       
       </div>
       </div>

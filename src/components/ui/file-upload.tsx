@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { cn } from "@/@/lib/utils";
 import React, { useEffect, useRef, useState } from "react";
@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { IconUpload } from "@tabler/icons-react";
 import { useDropzone } from "react-dropzone";
 import { gsap } from 'gsap';
+import supabase from "@/@/lib/client";
 
 
 const mainVariant = {
@@ -29,28 +30,126 @@ const secondaryVariant = {
     },
 };
 
-
-
-
-export const FileUpload = ({
-    onChange,
-}: {
-    onChange?: (files: File[]) => void;
-}) => {
+export const FileUpload = ({ onChange }: { onChange?: (files: File[]) => void; }) => {
     const [files, setFiles] = useState<File[]>([]);
     const fileInputRef = useRef<HTMLInputElement>(null);
-
-    const handleFileChange = (newFiles: File[]) => {
-        setFiles((prevFiles) => [...prevFiles, ...newFiles]);
-        onChange && onChange(newFiles);
-    };
-
     const fileRef = useRef<HTMLDivElement>(null);
-
+    const [urlInput, setUrlInput] = useState('');
+    const [shortenedUrl, setShortenedUrl] = useState('');
+    const [error, setError] = useState('');
 
     const handleClick = () => {
         fileInputRef.current?.click();
     };
+
+    const handleFileChange = async (newFiles: File[] , e : any) => {
+        e.preventDefault();
+
+        console.log("hello");
+        const acceptedFileTypes = ['image/jpeg', 'image/png', 'application/pdf']; // Example accepted types
+        const maxFileSize = 5 * 1024 * 1024; // 5MB limit
+
+        const validFiles = newFiles.filter(file => {
+            if (!acceptedFileTypes.includes(file.type)) {
+                console.error(`Unsupported file type: ${file.type}`);
+                return false;
+            }
+            if (file.size > maxFileSize) {
+                console.error(`File size exceeds limit: ${file.name} (${file.size / (1024 * 1024)} MB)`);
+                return false;
+            }
+            return true;
+        });
+
+        if (validFiles.length === 0) {
+            console.warn("No valid files to upload.");
+            return; // Exit if no valid files
+        }
+
+
+        setFiles((prevFiles) => [...prevFiles, ...newFiles]);
+        onChange && onChange(newFiles);
+
+        console.log("Above files");
+
+
+        for (const file of newFiles) {
+
+            const timestamp = Date.now();
+            const uniqueFileName = `public/${timestamp}_${file.name}`
+            console.log("into the files");
+
+            // Upload to Supabase storage
+            const { data, error: uploadError } = await supabase.storage
+                .from('uploads')
+                .upload(`${uniqueFileName}`, file);
+
+
+            console.log("upload");
+
+
+            if (uploadError) {
+                console.error('Error uploading file:', uploadError.message);
+                continue; // Skip to the next file on error
+            }
+
+            console.log('File Uploaded Successfully', data);
+            console.log("data");
+
+
+
+            // file ka url
+            const fileUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL!}/storage/v1/object/public/uploads/${uniqueFileName}`;
+            console.log(fileUrl);
+            setUrlInput(fileUrl);
+
+
+            //db mai metadata bharo
+            const { error: dbError } = await supabase
+                .from('uploads') // Replace with your table name
+                .insert([
+                    {
+                        file_name: file.name,
+                        file_size: file.size,
+                        file_url: fileUrl,
+                        created_at : new Date().toISOString(),
+                    },
+                ]);
+
+            if (dbError) {
+                console.error('Error storing file metadata:', dbError.message);
+            } else {
+                console.log('File metadata stored successfully:', { name: file.name, url: fileUrl });
+            }
+        }
+
+
+        // try {
+        //     console.log("hello api route shorten");
+            
+        //     const response = await fetch('/api/shorten', {
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //         },
+        //         body: JSON.stringify({ url: urlInput }),
+        //     });
+
+        //     console.log(("in bw api route shorten"));
+            
+
+        //     if (!response.ok) {
+        //         throw new Error('Error shortening URL');
+        //     }
+
+        //     const data = await response.json();
+        //     setShortenedUrl(data.tinyUrl);
+        // } catch (error : any) {
+        //     console.error('Error:', error);
+        //     setError('Error shortening URL: ' + error.message);
+        // }
+    };
+
 
     useEffect(() => {
         if (fileRef.current) {
@@ -66,7 +165,7 @@ export const FileUpload = ({
                 ease: "Power1.inOut"
             });
         }
-    }, [])
+    }, []);
 
     const { getRootProps, isDragActive } = useDropzone({
         multiple: false,
@@ -88,7 +187,11 @@ export const FileUpload = ({
                     ref={fileInputRef}
                     id="file-upload-handle"
                     type="file"
-                    onChange={(e) => handleFileChange(Array.from(e.target.files || []))}
+                    onChange={(e) => {
+                        const files = Array.from(e.target.files || []);
+                        console.log("File selected:", files);
+                        handleFileChange(files , e);
+                    }}
                     className="hidden"
                 />
                 <div className="absolute inset-0 [mask-image:radial-gradient(ellipse_at_center,white,transparent)]">
@@ -130,7 +233,6 @@ export const FileUpload = ({
                                             {(file.size / (1024 * 1024)).toFixed(2)} MB
                                         </motion.p>
                                     </div>
-
                                     <div className="flex text-sm md:flex-row flex-col items-start md:items-center w-full mt-2 justify-between text-neutral-600 dark:text-neutral-400">
                                         <motion.p
                                             initial={{ opacity: 0 }}
@@ -140,7 +242,6 @@ export const FileUpload = ({
                                         >
                                             {file.type}
                                         </motion.p>
-
                                         <motion.p
                                             initial={{ opacity: 0 }}
                                             animate={{ opacity: 1 }}
@@ -181,7 +282,6 @@ export const FileUpload = ({
                                 )}
                             </motion.div>
                         )}
-
                         {!files.length && (
                             <motion.div
                                 variants={secondaryVariant}
@@ -199,21 +299,17 @@ export function GridPattern() {
     const columns = 41;
     const rows = 11;
     return (
-        <div className="flex bg-gray-100 dark:bg-neutral-900 flex-shrink-0 flex-wrap justify-center items-center gap-x-px gap-y-px  scale-105">
-            {Array.from({ length: rows }).map((_, row) =>
-                Array.from({ length: columns }).map((_, col) => {
-                    const index = row * columns + col;
-                    return (
+        <div className="flex bg-gray-100 dark:bg-neutral-900 flex-shrink-0">
+            {Array.from({ length: rows }).map((_, rowIndex) => (
+                <div className="flex flex-col flex-shrink-0" key={rowIndex}>
+                    {Array.from({ length: columns }).map((_, colIndex) => (
                         <div
-                            key={`${col}-${row}`}
-                            className={`w-10 h-10 flex flex-shrink-0 rounded-[2px] ${index % 2 === 0
-                                    ? "bg-gray-50 dark:bg-neutral-950"
-                                    : "bg-gray-50 dark:bg-neutral-950 shadow-[0px_0px_1px_3px_rgba(255,255,255,1)_inset] dark:shadow-[0px_0px_1px_3px_rgba(0,0,0,1)_inset]"
-                                }`}
+                            className="w-3 h-3 m-1 bg-white dark:bg-neutral-600 rounded-full"
+                            key={colIndex}
                         />
-                    );
-                })
-            )}
+                    ))}
+                </div>
+            ))}
         </div>
     );
 }
