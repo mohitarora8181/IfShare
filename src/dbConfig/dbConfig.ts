@@ -1,4 +1,3 @@
-// Example for using the connection string in a Next.js API route
 import { Client } from 'pg';
 
 const dbClient = new Client({

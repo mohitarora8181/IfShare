@@ -8,7 +8,7 @@ import { useDropzone } from "react-dropzone";
 import { gsap } from 'gsap';
 import supabase from "@/@/lib/client";
 import QRCode from 'qrcode';
-
+import { Flip, toast } from "react-toastify";
 
 
 const mainVariant = {
@@ -32,24 +32,21 @@ const secondaryVariant = {
     },
 };
 
-export const FileUpload = ({ onChange }: { onChange?: (files: File[]) => void; }) => {
+export const FileUpload = () => {
     const [files, setFiles] = useState<File[]>([]);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const fileRef = useRef<HTMLDivElement>(null);
     const [qrCode, setQrCode] = useState('');
-    const [shortenedUrl, setShortenedUrl] = useState('');
-    const [error, setError] = useState('');
+    const [fileLink, setFileLink] = useState('');
 
     const handleClick = () => {
         fileInputRef.current?.click();
     };
 
     const handleFileChange = async (newFiles: File[], e: any) => {
-        e.preventDefault();
 
-        console.log("hello");
-        const acceptedFileTypes = ['image/jpeg', 'image/png', 'application/pdf']; 
-        const maxFileSize = 5 * 1024 * 1024; // 5MB limit
+        const acceptedFileTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+        const maxFileSize = 5 * 1024 * 1024;
 
         const validFiles = newFiles.filter(file => {
             if (!acceptedFileTypes.includes(file.type)) {
@@ -65,57 +62,39 @@ export const FileUpload = ({ onChange }: { onChange?: (files: File[]) => void; }
 
         if (validFiles.length === 0) {
             console.warn("No valid files to upload.");
-            return; 
+            return;
         }
 
 
         setFiles((prevFiles) => [...prevFiles, ...newFiles]);
-        onChange && onChange(newFiles);
-
-        console.log("Above files");
-
 
         for (const file of newFiles) {
-
-            
-
             const timestamp = Date.now();
             const uniqueFileName = `public/${timestamp}_${file.name}`
-            console.log("into the files");
 
-            // Upload ho gya upabase storage pe
             const { data, error: uploadError } = await supabase.storage
                 .from('uploads')
                 .upload(`${uniqueFileName}`, file);
 
-
-            console.log("upload");
-
-
             if (uploadError) {
                 console.error('Error uploading file:', uploadError.message);
-                continue; 
+                continue;
             }
 
             console.log('File Uploaded Successfully', data);
-            console.log("data");
+            const uniqueID = generateUniqueId();
 
+            const fileUrl = `http://localhost:3000/file/${uniqueID}`;
 
-
-            // file ka url
-            const fileUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL!}/storage/v1/object/public/uploads/${uniqueFileName}`;
-            console.log(fileUrl);
-            setQrCode(fileUrl);
-
-
-            //db mai metadata bharo
             const { error: dbError } = await supabase
-                .from('uploads') // Replace with your table name
+                .from('uploads')
                 .insert([
                     {
+                        id: uniqueID,
                         file_name: file.name,
                         file_size: file.size,
-                        file_url: fileUrl,
+                        file_type: file.type,
+                        file_path: `/storage/v1/object/public/uploads/${uniqueFileName}`,
                         created_at: new Date().toISOString(),
                     },
                 ]);
@@ -126,54 +105,33 @@ export const FileUpload = ({ onChange }: { onChange?: (files: File[]) => void; }
                 console.log('File metadata stored successfully:', { name: file.name, url: fileUrl });
             }
 
-
-            await generateQrCode(fileUrl);            
-
-            
-
-            console.log(qrCode);
-            
-
+            await generateQrCode(fileUrl);
             console.log("qr code generated");
-            
         }
-
-        // try {
-        //     console.log("hello api route shorten");
-
-        //     const response = await fetch('/api/shorten', {
-        //         method: 'POST',
-        //         headers: {
-        //             'Content-Type': 'application/json',
-        //         },
-        //         body: JSON.stringify({ url: qrCode }),
-        //     });
-
-        //     console.log(("in bw api route shorten"));
-
-
-        //     if (!response.ok) {
-        //         throw new Error('Error shortening URL');
-        //     }
-
-        //     const data = await response.json();
-        //     setShortenedUrl(data.tinyUrl);
-        // } catch (error : any) {
-        //     console.error('Error:', error);
-        //     setError('Error shortening URL: ' + error.message);
-        // }
     };
 
-    const generateQrCode = async (url : string) => {
+    const generateQrCode = async (url: string) => {
         try {
             const qrCodeDataUrl = await QRCode.toDataURL(url);
             setQrCode(qrCodeDataUrl);
-            console.log(qrCodeDataUrl);
-            
+            setFileLink(url);
+            fileInputRef?.current?.setAttribute("disabled", "true");
+
         } catch (error) {
             console.error("Error generating QR code", error);
         }
     };
+
+    function generateUniqueId() {
+        return Array.from({ length: 6 }, () => {
+            const randomChar = Math.floor(Math.random() * 62);
+            return randomChar < 10
+                ? String.fromCharCode(randomChar + 48)
+                : randomChar < 36
+                    ? String.fromCharCode(randomChar + 87)
+                    : String.fromCharCode(randomChar + 29);
+        }).join('');
+    }
 
 
     useEffect(() => {
@@ -200,7 +158,7 @@ export const FileUpload = ({ onChange }: { onChange?: (files: File[]) => void; }
             console.log(error);
         },
     });
-
+    
     return (
         <div className="w-full" {...getRootProps()}>
             <motion.div
@@ -223,19 +181,41 @@ export const FileUpload = ({ onChange }: { onChange?: (files: File[]) => void; }
                     <GridPattern />
                 </div>
 
-                <div>
-                    <h2>Your QR Code</h2>
-                    {qrCode ? (
-                        <img src={qrCode} alt="QR Code" />
-                    ) : (
-                        <p>Loading QR code...</p>
-                    )}
-                </div>
+                {qrCode && <div className="p-5 w-fit bg-black border-white border rounded-xl absolute">
+                    <img draggable={false} className="rounded-xl mb-5 m-auto select-none text-white" src={qrCode} alt="QR Code" />
+                    <span className="flex gap-2">
+                        <motion.button
+                            className="text-sm bg-black border border-gray-200 px-3 rounded-full"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => {
+                                navigator.clipboard.writeText(fileLink).then(() => {
+                                    toast.success('Copied ✔', {
+                                        position: "bottom-left",
+                                        autoClose: 2000,
+                                        hideProgressBar: false,
+                                        closeOnClick: true,
+                                        pauseOnHover: true,
+                                        draggable: true,
+                                        progress: 0,
+                                        theme: "light",
+                                        transition: Flip,
+                                    });
+                                })
+                            }}
+                        >
+                            Copy
+                        </motion.button>
+                        <a href={fileLink} target="_blank" className="bg-gray-800 px-5 p-1 rounded-full">{fileLink}</a>
+                    </span>
+                </div>}
+
+
                 <div className="flex flex-col items-center justify-center">
                     <p className="relative z-20 font-sans font-bold text-neutral-700 dark:text-neutral-300 text-base">
                         Upload file
                     </p>
-                    <p className="relative z-20 font-sans font-normal text-neutral-400 dark:text-neutral-400 text-base mt-2">
+                    <p className="relative z-20 font-sans font-normal text-neutral-800 dark:text-neutral-400 text-base mt-2">
                         Drag or drop your files here or click to upload
                     </p>
                     <div className="relative w-full mt-10 max-w-xl mx-auto">
