@@ -7,6 +7,8 @@ import { IconUpload } from "@tabler/icons-react";
 import { useDropzone } from "react-dropzone";
 import { gsap } from 'gsap';
 import supabase from "@/@/lib/client";
+import QRCode from 'qrcode';
+
 
 
 const mainVariant = {
@@ -34,7 +36,7 @@ export const FileUpload = ({ onChange }: { onChange?: (files: File[]) => void; }
     const [files, setFiles] = useState<File[]>([]);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const fileRef = useRef<HTMLDivElement>(null);
-    const [urlInput, setUrlInput] = useState('');
+    const [qrCode, setQrCode] = useState('');
     const [shortenedUrl, setShortenedUrl] = useState('');
     const [error, setError] = useState('');
 
@@ -42,7 +44,7 @@ export const FileUpload = ({ onChange }: { onChange?: (files: File[]) => void; }
         fileInputRef.current?.click();
     };
 
-    const handleFileChange = async (newFiles: File[] , e : any) => {
+    const handleFileChange = async (newFiles: File[], e: any) => {
         e.preventDefault();
 
         console.log("hello");
@@ -101,7 +103,7 @@ export const FileUpload = ({ onChange }: { onChange?: (files: File[]) => void; }
             // file ka url
             const fileUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL!}/storage/v1/object/public/uploads/${uniqueFileName}`;
             console.log(fileUrl);
-            setUrlInput(fileUrl);
+            setQrCode(fileUrl);
 
 
             //db mai metadata bharo
@@ -112,7 +114,7 @@ export const FileUpload = ({ onChange }: { onChange?: (files: File[]) => void; }
                         file_name: file.name,
                         file_size: file.size,
                         file_url: fileUrl,
-                        created_at : new Date().toISOString(),
+                        created_at: new Date().toISOString(),
                     },
                 ]);
 
@@ -121,22 +123,32 @@ export const FileUpload = ({ onChange }: { onChange?: (files: File[]) => void; }
             } else {
                 console.log('File metadata stored successfully:', { name: file.name, url: fileUrl });
             }
-        }
 
+
+            await generateQrCode(fileUrl);            
+
+            
+
+            console.log(qrCode);
+            
+
+            console.log("qr code generated");
+            
+        }
 
         // try {
         //     console.log("hello api route shorten");
-            
+
         //     const response = await fetch('/api/shorten', {
         //         method: 'POST',
         //         headers: {
         //             'Content-Type': 'application/json',
         //         },
-        //         body: JSON.stringify({ url: urlInput }),
+        //         body: JSON.stringify({ url: qrCode }),
         //     });
 
         //     console.log(("in bw api route shorten"));
-            
+
 
         //     if (!response.ok) {
         //         throw new Error('Error shortening URL');
@@ -148,6 +160,17 @@ export const FileUpload = ({ onChange }: { onChange?: (files: File[]) => void; }
         //     console.error('Error:', error);
         //     setError('Error shortening URL: ' + error.message);
         // }
+    };
+
+    const generateQrCode = async (url : string) => {
+        try {
+            const qrCodeDataUrl = await QRCode.toDataURL(url);
+            setQrCode(qrCodeDataUrl);
+            console.log(qrCodeDataUrl);
+            
+        } catch (error) {
+            console.error("Error generating QR code", error);
+        }
     };
 
 
@@ -190,12 +213,21 @@ export const FileUpload = ({ onChange }: { onChange?: (files: File[]) => void; }
                     onChange={(e) => {
                         const files = Array.from(e.target.files || []);
                         console.log("File selected:", files);
-                        handleFileChange(files , e);
+                        handleFileChange(files, e);
                     }}
                     className="hidden"
                 />
                 <div className="absolute inset-0 [mask-image:radial-gradient(ellipse_at_center,white,transparent)]">
                     <GridPattern />
+                </div>
+
+                <div>
+                    <h2>Your QR Code</h2>
+                    {qrCode ? (
+                        <img src={qrCode} alt="QR Code" />
+                    ) : (
+                        <p>Loading QR code...</p>
+                    )}
                 </div>
                 <div className="flex flex-col items-center justify-center">
                     <p className="relative z-20 font-sans font-bold text-neutral-700 dark:text-neutral-300 text-base">
