@@ -9,6 +9,8 @@ import { gsap } from 'gsap';
 import supabase from "@/@/lib/client";
 import QRCode from 'qrcode';
 import { Flip, toast } from "react-toastify";
+import CryptoJS from 'crypto-js';
+
 
 
 const mainVariant = {
@@ -72,9 +74,16 @@ export const FileUpload = () => {
             const timestamp = Date.now();
             const uniqueFileName = `public/${timestamp}_${file.name}`
 
+            const encryptedBlob = await file.arrayBuffer().then((buffer) => {
+                const encryptedData = CryptoJS.AES.encrypt(CryptoJS.lib.WordArray.create(buffer), "key123").toString();
+                console.log("encrypted Data" , encryptedData);
+                
+                return new Blob([encryptedData], { type: file.type });
+            });
+
             const { data, error: uploadError } = await supabase.storage
                 .from('uploads')
-                .upload(`${uniqueFileName}`, file);
+                .upload(`${uniqueFileName}`, encryptedBlob);
 
             if (uploadError) {
                 console.error('Error uploading file:', uploadError.message);
@@ -84,7 +93,7 @@ export const FileUpload = () => {
             console.log('File Uploaded Successfully', data);
             const uniqueID = generateUniqueId();
 
-            const fileUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}file/${uniqueID}`;
+            const fileUrl = `${process.env.NEXT_PUBLIC_LOCAL_URL}file/${uniqueID}`;
 
             const { error: dbError } = await supabase
                 .from('uploads')
@@ -121,6 +130,7 @@ export const FileUpload = () => {
             console.error("Error generating QR code", error);
         }
     };
+    
 
     function generateUniqueId() {
         return Array.from({ length: 6 }, () => {

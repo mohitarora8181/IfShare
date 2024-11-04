@@ -30,6 +30,8 @@ const page = () => {
                 .single().then(({ data }) => {
                     setFile(data);
                 });
+
+                console.log("file" , file);
         } catch (e) {
             console.error(e);
         }
