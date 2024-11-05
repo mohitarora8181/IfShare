@@ -14,7 +14,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "ShareKaro",
+  title: "IfShare",
   description: "Sharing Files with Ease :)",
 };
 
