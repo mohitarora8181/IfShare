@@ -47,8 +47,32 @@ export const FileUpload = () => {
 
     const handleFileChange = async (newFiles: File[], e: any) => {
 
-        const acceptedFileTypes = ['*'];
-        const maxFileSize = 5 * 1024 * 1024;
+        const acceptedFileTypes = [
+            '*', // Allow all file types
+            'image/jpeg', // JPEG images
+            'image/png', // PNG images
+            'image/gif', // GIF images
+            'image/webp', // WebP images
+            'image/svg+xml', // SVG images
+            'application/pdf', // PDF documents
+            'application/msword', // Microsoft Word documents (.doc)
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // Microsoft Word documents (.docx)
+            'application/vnd.ms-excel', // Microsoft Excel documents (.xls)
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // Microsoft Excel documents (.xlsx)
+            'application/vnd.ms-powerpoint', // Microsoft PowerPoint documents (.ppt)
+            'application/vnd.openxmlformats-officedocument.presentationml.presentation', // Microsoft PowerPoint documents (.pptx)
+            'text/plain', // Plain text files (.txt)
+            'text/csv', // CSV files
+            'application/zip', // ZIP archives
+            'application/x-rar-compressed', // RAR archives
+            'audio/mpeg', // MP3 audio files
+            'audio/wav', // WAV audio files
+            'audio/ogg', // OGG audio files
+            'video/mp4', // MP4 video files
+            'video/x-matroska', // MKV video files
+            'video/x-msvideo', // AVI video files
+          ];
+                  const maxFileSize = 5 * 1024 * 1024;
 
         const validFiles = newFiles.filter(file => {
             if (!acceptedFileTypes.includes(file.type)) {
@@ -91,7 +115,7 @@ export const FileUpload = () => {
             console.log('File Uploaded Successfully', data);
             const uniqueID = generateUniqueId();
 
-            const fileUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}file/${uniqueID}`;
+            const fileUrl = `${process.env.NEXT_PUBLIC_LOCAL_URL}file/${uniqueID}`;
 
             const { error: dbError } = await supabase
                 .from('uploads')
@@ -294,7 +318,7 @@ export const FileUpload = () => {
 
                     {qrCode && <div className="p-5 bg-black z-[1000]">
                     <img draggable={false} className="rounded-xl mb-5 m-auto select-none text-white" src={qrCode} alt="QR Code" />
-                    <span className="flex gap-2">
+                    <span className="flex gap-2 bg-black">
                         <motion.button
                             className="text-sm bg-black px-3"
                             whileHover={{ scale: 1.05 }}
@@ -315,7 +339,7 @@ export const FileUpload = () => {
                                 })
                             }}
                         >
-                            <button className="bg-slate-800 no-underline group cursor-pointer relative shadow-2xl shadow-zinc-900 rounded-full p-px text-xs font-semibold leading-6  text-white inline-block">
+                            <button className="bg-slate-800 no-underline group cursor-pointer relative shadow-2xl shadow-zinc-900 rounded-full p-px text-xs font-semibold leading-6 text-white inline-block">
         <span className="absolute inset-0 overflow-hidden rounded-full">
           <span className="absolute inset-0 rounded-full bg-[image:radial-gradient(75%_100%_at_50%_0%,rgba(56,189,248,0.6)_0%,rgba(56,189,248,0)_75%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100"></span>
         </span>
