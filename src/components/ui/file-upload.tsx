@@ -72,7 +72,7 @@ export const FileUpload = () => {
             'video/x-matroska', // MKV video files
             'video/x-msvideo', // AVI video files
           ];
-                  const maxFileSize = 5 * 1024 * 1024;
+            const maxFileSize = 50 * 1024 * 1024;
 
         const validFiles = newFiles.filter(file => {
             if (!acceptedFileTypes.includes(file.type)) {
