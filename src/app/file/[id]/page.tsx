@@ -6,6 +6,7 @@ import { cn } from '@/@/lib/utils';
 import supabase from '@/@/lib/client';
 import { useParams } from 'next/navigation';
 import { GridPattern } from '@/@/components/ui/file-upload';
+import CryptoJS from 'crypto-js';
 
 
 
@@ -30,8 +31,6 @@ const page = () => {
                 .single().then(({ data }) => {
                     setFile(data);
                 });
-
-                console.log("file" , file);
         } catch (e) {
             console.error(e);
         }
@@ -96,13 +95,24 @@ const page = () => {
                         </motion.div>
                         <motion.div className='w-full flex justify-center p-5'>
                             <motion.button
-                                onClick={() => {
-                                    const a = document.createElement('a');
-                                    a.href = process.env.NEXT_PUBLIC_SUPABASE_URL + file.file_path + "?download";
-                                    a.download = file.file_name;
-                                    document.body.appendChild(a);
-                                    a.click();
-                                    document.body.removeChild(a);
+                                onClick={async () => {
+                                    try {
+                                        const encryptedfile = await fetch(process.env.NEXT_PUBLIC_SUPABASE_URL + file.file_path)
+                                        const encryptedData = await encryptedfile.text();
+                                        const decrypted = CryptoJS.AES.decrypt(encryptedData, process.env.NEXT_PUBLIC_ENCRYPTION_KEY!);
+                                        const decryptedArrayBuffer = Buffer.from(decrypted.toString(CryptoJS.enc.Hex), 'hex');;
+                                        const decryptedBlob = new Blob([decryptedArrayBuffer], { type: file.file_type! });
+                                        console.log(URL.createObjectURL(decryptedBlob))
+
+                                        const a = document.createElement('a');
+                                        a.href = window.URL.createObjectURL(decryptedBlob);
+                                        a.download = file.file_name;
+                                        document.body.appendChild(a);
+                                        a.click();
+                                        document.body.removeChild(a);
+                                    } catch (Err) {
+                                        console.error(Err)
+                                    }
                                 }}
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95, backgroundColor: "white", color: "black" }}

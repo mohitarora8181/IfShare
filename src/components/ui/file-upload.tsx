@@ -75,10 +75,8 @@ export const FileUpload = () => {
             const uniqueFileName = `public/${timestamp}_${file.name}`
 
             const encryptedBlob = await file.arrayBuffer().then((buffer) => {
-                const encryptedData = CryptoJS.AES.encrypt(CryptoJS.lib.WordArray.create(buffer), "key123").toString();
-                console.log("encrypted Data" , encryptedData);
-                
-                return new Blob([encryptedData], { type: file.type });
+                const encryptedData = CryptoJS.AES.encrypt(CryptoJS.lib.WordArray.create(buffer), process.env.NEXT_PUBLIC_ENCRYPTION_KEY!);
+                return new Blob([encryptedData.toString()], { type: file.type });
             });
 
             const { data, error: uploadError } = await supabase.storage
@@ -130,7 +128,7 @@ export const FileUpload = () => {
             console.error("Error generating QR code", error);
         }
     };
-    
+
 
     function generateUniqueId() {
         return Array.from({ length: 6 }, () => {
@@ -191,7 +189,7 @@ export const FileUpload = () => {
                     <GridPattern />
                 </div>
 
-                {qrCode && <div className="p-5 w-fit bg-black border-white border rounded-xl absolute">
+                {qrCode && <div className="p-5 w-fit bg-black border-white border rounded-xl absolute z-[1000]">
                     <img draggable={false} className="rounded-xl mb-5 m-auto select-none text-white" src={qrCode} alt="QR Code" />
                     <span className="flex gap-2">
                         <motion.button
