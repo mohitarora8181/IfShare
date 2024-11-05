@@ -47,7 +47,7 @@ export const FileUpload = () => {
 
     const handleFileChange = async (newFiles: File[], e: any) => {
 
-        const acceptedFileTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+        const acceptedFileTypes = ['*'];
         const maxFileSize = 5 * 1024 * 1024;
 
         const validFiles = newFiles.filter(file => {
