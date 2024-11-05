@@ -18,9 +18,13 @@ interface FileMetadata {
     file_type: string | null;
     id: string;
 }
+
 const page = () => {
     const [file, setFile] = useState<FileMetadata>();
     const params = useParams();
+
+    console.log(params.id);
+    
 
     const fetchFile = async () => {
         try {
@@ -35,6 +39,9 @@ const page = () => {
             console.error(e);
         }
     }
+
+    console.log(file);
+    
 
     useEffect(() => {
         fetchFile();
