@@ -4,48 +4,75 @@ import React from 'react';
 import { FileUpload } from '../components/ui/file-upload';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { InfiniteMovingCards } from '../components/ui/infinite-moving-cards';
+import { AnimatedTooltip } from '../components/ui/animated-tooltip';
+import something from "@/@/assets/1730644219432_do.jpg"
+import { TextRevealCard, TextRevealCardDescription, TextRevealCardTitle } from '../components/ui/text-reveal-card';
 
-const testimonials = [
+
+
+const people = [
   {
-    quote:"Just Tap and Share: Experience Blazing Fast File Transfers with End-to-End Encryption, Ensuring Your Data Is Always Secure While You Share Effortlessly!",
-    name: "Tap And Share",
-    // title: "Hamlet",
+    id: 1,
+    name: "Mohit Arora",
+    designation: "Web Developer",
+    image: something
   },
   {
-    quote: "Share Files at Lightning Speed While Ensuring Their Safety: Our End-to-End Encryption Keeps Your Data Secure, Allowing You to Transfer Files Effortlessly and With Confidence!",
-    name: "Extremely Fast Speed",
-    // title: "A Dream Within a Dream",
-  },
-  {
-    quote: "Elevate Your Sharing Experience with End-to-End Encryption: Our Service Guarantees That Your Files Are Securely Encrypted from the Moment You Upload Until They're in the Hands of the Recipient. Share Freely and Safely!",
-    name: "End To End Encryption",
-    // title: "Moby-Dick",
+    id: 2,
+    name: "Murtaza",
+    designation: "Web Developer",
+    image: something
   },
 ];
+
 
 const HomePage = () => {
   return (
     <>
-      <div className="w-full bg-black flex flex-col items-center justify-center text-white min-h-screen">
+      <div className="w-full bg-black flex flex-col items-center justify-center text-white min-h-full overflow-y-auto ">
         <div className="w-full flex flex-col items-center">
 
           {/* File Upload Section */}
-          <div className='w-full min-h-[50vh] '>
+          <div className='w-full  min-h-[50vh] '>
             <FileUpload />
           </div>
 
           {/* Testimonials Section */}
-          <div className='flex mt-[-6vh] w-full '>
-            <InfiniteMovingCards
-              items={testimonials}
-              direction="right"
-              speed="slow"
-            />
+          <div className='flex mt-[-6vh] w-full text-white'>
+            <div className='flex w-full justify-between p-4'>
+              <TextRevealCard
+                text="End To End Encryption"
+                revealText="All About Privacy"
+              >
+                <TextRevealCardTitle>
+                  Your Privacy Matters.
+                </TextRevealCardTitle>
+                <TextRevealCardDescription>
+                  We ensures that only the sender and the recipient can access the content of the communication.
+                </TextRevealCardDescription>
+              </TextRevealCard>
+
+
+              <TextRevealCard
+                text="Amazingly Fast"
+                revealText="High Speed File Sharing"
+              >
+                <TextRevealCardTitle>
+                  Blazing Fast Speeds.
+                </TextRevealCardTitle>
+                <TextRevealCardDescription>
+                Experience blazing fast speed that delivers unmatched performance, ensuring seamless access to your data.
+                </TextRevealCardDescription>
+              </TextRevealCard>
+            </div>
+
+            <div className="flex absolute bottom-10 left-1/2 -translate-x-1/2">
+              <AnimatedTooltip items={people} />
+            </div>
           </div>
 
           {/* Additional Content to Enable Scrolling */}
-          {/* <div className='w-full h-[200vh]'></div> This adds extra height for scrolling */}
+          <div className='w-full h-[200vh]'></div> {/* This adds extra height for scrolling */}
 
         </div>
       </div>
