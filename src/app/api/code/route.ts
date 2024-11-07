@@ -16,7 +16,7 @@ const codeSchema = new mongoose.Schema({
 codeSchema.set('timestamps', true);
 const CodeModel = mongoose.models.Code || mongoose.model('Code', codeSchema);
 
-export async function POST(req: NextRequest, res: NextResponse) {
+export async function POST(req: NextRequest) {
     await connectDB();
 
     const { id, value, language, theme } = await req.json();
