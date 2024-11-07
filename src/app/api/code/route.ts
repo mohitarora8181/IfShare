@@ -37,7 +37,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
 }
 
 
-export async function GET(req: NextRequest, res: NextResponse) {
+export async function GET(req: NextRequest) {
     await connectDB();
     const { searchParams } = req.nextUrl;
     const data = await CodeModel.findOne({
