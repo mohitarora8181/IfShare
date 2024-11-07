@@ -48,7 +48,7 @@ const page = () => {
 
     return (
         <div className="flex flex-col items-center justify-center w-full h-full bg-black absolute">
-            <div className="relative w-full mt-10 max-w-xl mx-auto">
+            <div className="relative w-full mt-10 max-w-xl mx-auto max-sm:px-5">
                 {file &&
                     <>
                         <motion.div

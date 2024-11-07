@@ -90,7 +90,7 @@ const config = {
       kanit : ["Kanit" , "sans-serif"]
     }
   },
-  plugins: [require("tailwindcss-animate"), addVariablesForColors],
+  plugins: [require("tailwindcss-animate"), addVariablesForColors,require("tailwind-scrollbar")],
 } satisfies Config
 
 function addVariablesForColors({ addBase, theme }: any) {

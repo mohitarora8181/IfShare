@@ -27,22 +27,22 @@ const people = [
 
 
 const HomePage = () => {
-  const [isMounted , setMounted] = useState(false);
+  const [isMounted, setMounted] = useState(false);
 
-  useEffect(()=>{
+  useEffect(() => {
     setMounted(true);
-  },[]);
+  }, []);
 
   return (
     <>
-      <div className="w-full bg-black flex flex-col items-center justify-center text-white min-h-full overflow-y-auto ">
+      <div className="w-full bg-black flex flex-col items-center justify-center text-white min-h-full overflow-y-hidden ">
         <div className="w-full flex flex-col items-center">
           <div className='w-full  min-h-[50vh] '>
             <FileUpload />
           </div>
 
           {isMounted && <div className='flex mt-[-6vh] pl-10 w-full text-white'>
-            <div className='flex w-full justify-between p-4'>
+            <div className='flex w-full justify-between p-4  max-sm:hidden'>
               <TextRevealCard
                 text="End To End Encryption"
                 revealText="All About Privacy"

@@ -174,7 +174,7 @@ export const FileUpload = () => {
             <motion.div
                 onClick={handleClick}
                 whileHover="animate"
-                className="p-10 group/file block rounded-lg cursor-pointer w-full relative overflow-hidden"
+                className="p-10 max-sm:p-5 group/file block rounded-lg cursor-pointer w-full relative overflow-hidden"
             >
                 <input
                     ref={fileInputRef}
@@ -189,9 +189,9 @@ export const FileUpload = () => {
                 />
 
                 <div className="flex flex-col sm:flex-row items-center justify-center w-full min-h-[40vh]">
-                    <div className="flex flex-col w-[50vw]">
+                    <div className="flex flex-col w-[50vw] max-sm:w-full">
                         <div className="flex flex-col text-center items-center">
-                            <p className="font-anton bg-gradient-to-r from-cyan-500 to-blue-500 w-[10vw] sm:w-[12vw] md:w-[15vw] lg:w-[18vw] xl:w-[20vw] text-[0.75rem] rounded-md">
+                            <p className="font-anton bg-gradient-to-r from-cyan-500 to-blue-500 w-[10vw] max-sm:w-full text-[0.75rem] rounded-md">
                                 Upload file
                             </p>
 
@@ -199,7 +199,6 @@ export const FileUpload = () => {
                             <span className="relative text-white z-20 font-sans font-normal dark:text-neutral-400 text-base mt-2">
                                 <TextGenerateEffect className='text-white sm:flex hidden' words={words} />
                                 <TextGenerateEffect className='text-white sm:hidden' words={title} />
-
                             </span>
                         </div>
                         <div className="relative w-full mt-10 max-w-xl mx-auto">
@@ -294,11 +293,11 @@ export const FileUpload = () => {
 
                     </div>
 
-                    {qrCode && <div className="p-5 bg-black z-[1000]">
+                    {qrCode && <div className="p-5 bg-black z-[1000] max-sm:pb-52">
                         <img draggable={false} className="rounded-xl mb-5 m-auto select-none text-white" src={qrCode} alt="QR Code" />
-                        <span className="flex gap-2 bg-black">
+                        <span className="flex gap-2 bg-black justify-center">
                             <motion.button
-                                className=" bg-slate-800 no-underline group cursor-pointer relative shadow-2xl shadow-zinc-900 rounded-full p-px text-xs font-semibold leading-6 text-white inline-block"
+                                className=" bg-slate-800 max-sm:w-[95%] no-underline group cursor-pointer relative shadow-2xl shadow-zinc-900 rounded-full p-px text-xs font-semibold leading-6 text-white inline-block"
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                                 onClick={() => {
