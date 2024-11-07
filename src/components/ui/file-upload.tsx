@@ -13,7 +13,6 @@ import CryptoJS from 'crypto-js';
 import { TextGenerateEffect } from "./text-generate-effect";
 
 
-
 const mainVariant = {
     initial: {
         x: 0,
@@ -36,7 +35,7 @@ const secondaryVariant = {
 };
 
 const words = `
-"Upload and share files seamlessly with our web application, enabling fast, secure, and user-friendly file management!"
+"Upload and share files seamlessly with this application, enabling fast, secure, and user-friendly file management!"
 `;
 
 const title = `
@@ -55,39 +54,9 @@ export const FileUpload = () => {
     };
 
     const handleFileChange = async (newFiles: File[], e: any) => {
-
-        const acceptedFileTypes = [
-            '*', // Allow all file types
-            'image/jpeg', // JPEG images
-            'image/png', // PNG images
-            'image/gif', // GIF images
-            'image/webp', // WebP images
-            'image/svg+xml', // SVG images
-            'application/pdf', // PDF documents
-            'application/msword', // Microsoft Word documents (.doc)
-            'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // Microsoft Word documents (.docx)
-            'application/vnd.ms-excel', // Microsoft Excel documents (.xls)
-            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // Microsoft Excel documents (.xlsx)
-            'application/vnd.ms-powerpoint', // Microsoft PowerPoint documents (.ppt)
-            'application/vnd.openxmlformats-officedocument.presentationml.presentation', // Microsoft PowerPoint documents (.pptx)
-            'text/plain', // Plain text files (.txt)
-            'text/csv', // CSV files
-            'application/zip', // ZIP archives
-            'application/x-rar-compressed', // RAR archives
-            'audio/mpeg', // MP3 audio files
-            'audio/wav', // WAV audio files
-            'audio/ogg', // OGG audio files
-            'video/mp4', // MP4 video files
-            'video/x-matroska', // MKV video files
-            'video/x-msvideo', // AVI video files
-        ];
         const maxFileSize = 50 * 1024 * 1024;
 
         const validFiles = newFiles.filter(file => {
-            if (!acceptedFileTypes.includes(file.type)) {
-                console.error(`Unsupported file type: ${file.type}`);
-                return false;
-            }
             if (file.size > maxFileSize) {
                 console.error(`File size exceeds limit: ${file.name} (${file.size / (1024 * 1024)} MB)`);
                 return false;
@@ -201,7 +170,7 @@ export const FileUpload = () => {
     });
 
     return (
-        <div className="w-full" {...getRootProps()}>
+        <div className="w-full py-12" {...getRootProps()}>
             <motion.div
                 onClick={handleClick}
                 whileHover="animate"
@@ -218,10 +187,6 @@ export const FileUpload = () => {
                     }}
                     className="hidden"
                 />
-                <div className="absolute inset-0 [mask-image:radial-gradient(ellipse_at_center,white,transparent)]">
-                    {/* <GridPattern /> */}
-                </div>
-
 
                 <div className="flex flex-col sm:flex-row items-center justify-center w-full min-h-[40vh]">
                     <div className="flex flex-col w-[50vw]">
@@ -231,11 +196,11 @@ export const FileUpload = () => {
                             </p>
 
 
-                            <p className="relative text-white z-20 font-sans font-normal text-neutral-800 dark:text-neutral-400 text-base mt-2">
+                            <span className="relative text-white z-20 font-sans font-normal dark:text-neutral-400 text-base mt-2">
                                 <TextGenerateEffect className='text-white sm:flex hidden' words={words} />
                                 <TextGenerateEffect className='text-white sm:hidden' words={title} />
 
-                            </p>
+                            </span>
                         </div>
                         <div className="relative w-full mt-10 max-w-xl mx-auto">
                             {files.length > 0 &&
@@ -333,7 +298,7 @@ export const FileUpload = () => {
                         <img draggable={false} className="rounded-xl mb-5 m-auto select-none text-white" src={qrCode} alt="QR Code" />
                         <span className="flex gap-2 bg-black">
                             <motion.button
-                                className="text-sm bg-black px-3"
+                                className=" bg-slate-800 no-underline group cursor-pointer relative shadow-2xl shadow-zinc-900 rounded-full p-px text-xs font-semibold leading-6 text-white inline-block"
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                                 onClick={() => {
@@ -352,33 +317,31 @@ export const FileUpload = () => {
                                     })
                                 }}
                             >
-                                <button className="bg-slate-800 no-underline group cursor-pointer relative shadow-2xl shadow-zinc-900 rounded-full p-px text-xs font-semibold leading-6 text-white inline-block">
-                                    <span className="absolute inset-0 overflow-hidden rounded-full">
-                                        <span className="absolute inset-0 rounded-full bg-[image:radial-gradient(75%_100%_at_50%_0%,rgba(56,189,248,0.6)_0%,rgba(56,189,248,0)_75%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100"></span>
-                                    </span>
-                                    <div className="relative flex space-x-2 items-center z-10 rounded-full bg-zinc-950 py-0.5 px-4 ring-1 ring-white/10 ">
-                                        <span>{`Copy`}</span>
-                                        <svg
-                                            width="16"
-                                            height="16"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <path
-                                                stroke="currentColor"
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth="1.5"
-                                                d="M10.75 8.75L14.25 12L10.75 15.25"
-                                            ></path>
-                                        </svg>
-                                        <a href={fileLink} target="_blank" className="font-kanit px-5 p-1 rounded-full">{fileLink}</a>
+                                <span className="absolute inset-0 overflow-hidden rounded-full">
+                                    <span className="absolute inset-0 rounded-full bg-[image:radial-gradient(75%_100%_at_50%_0%,rgba(56,189,248,0.6)_0%,rgba(56,189,248,0)_75%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100"></span>
+                                </span>
+                                <div className="relative flex space-x-2 items-center z-10 rounded-full bg-zinc-950 py-0.5 px-4 ring-1 ring-white/10 ">
+                                    <span>{`Copy`}</span>
+                                    <svg
+                                        width="16"
+                                        height="16"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <path
+                                            stroke="currentColor"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="1.5"
+                                            d="M10.75 8.75L14.25 12L10.75 15.25"
+                                        ></path>
+                                    </svg>
+                                    <a href={fileLink} target="_blank" className="font-kanit px-5 p-1 rounded-full">{fileLink}</a>
 
-                                    </div>
-                                    <span className="absolute -bottom-0 left-[1.125rem] h-px w-[calc(100%-2.25rem)] bg-gradient-to-r from-emerald-400/0 via-emerald-400/90 to-emerald-400/0 transition-opacity duration-500 group-hover:opacity-40"></span>
+                                </div>
+                                <span className="absolute -bottom-0 left-[1.125rem] h-px w-[calc(100%-2.25rem)] bg-gradient-to-r from-emerald-400/0 via-emerald-400/90 to-emerald-400/0 transition-opacity duration-500 group-hover:opacity-40"></span>
 
-                                </button>
                             </motion.button>
                         </span>
                     </div>}

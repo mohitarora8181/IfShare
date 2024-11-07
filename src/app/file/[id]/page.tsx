@@ -5,7 +5,6 @@ import { motion } from "framer-motion"
 import { cn } from '@/@/lib/utils';
 import supabase from '@/@/lib/client';
 import { useParams } from 'next/navigation';
-import { GridPattern } from '@/@/components/ui/file-upload';
 import CryptoJS from 'crypto-js';
 
 
@@ -17,7 +16,7 @@ interface FileMetadata {
     file_path: string;
     file_type: string | null;
     id: string;
-}
+} 
 
 const page = () => {
     const [file, setFile] = useState<FileMetadata>();
@@ -49,17 +48,15 @@ const page = () => {
 
     return (
         <div className="flex flex-col items-center justify-center w-full h-full bg-black absolute">
-            <div className="absolute inset-0 h-full [mask-image:radial-gradient(ellipse_at_center,white,transparent)]">
-                <GridPattern />
-            </div>
             <div className="relative w-full mt-10 max-w-xl mx-auto">
                 {file &&
                     <>
                         <motion.div
                             key={"file" + 0}
                             layoutId={0 === 0 ? "file-upload" : "file-upload-" + 0}
+                            whileTap={{scale:0.95}}
                             className={cn(
-                                "relative cursor-pointer hover:scale-110 transition-all overflow-hidden z-40 bg-white dark:bg-neutral-900 flex flex-col items-start justify-start md:h-24 p-4 mt-4 w-full mx-auto rounded-md",
+                                "relative cursor-pointer hover:scale-105 transition-all overflow-hidden z-40 bg-white dark:bg-neutral-900 flex flex-col items-start justify-start md:h-24 p-4 mt-4 w-full mx-auto rounded-md",
                                 "shadow-sm"
                             )}
                         >
