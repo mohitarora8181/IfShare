@@ -3,6 +3,12 @@
 @tailwind utilities;
 
 @layer base {
+
+  ul,
+  ol {
+    list-style: revert;
+  }
+
   :root {
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
@@ -63,7 +69,35 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
 }
+
+
+.tiptap {
+  :first-child {
+    margin-top: 0;
+  }
+
+  pre {
+    background-color: rgb(42, 42, 42);
+    border-radius: 0.5rem;
+    color: var(--white);
+    font-family: 'JetBrainsMono', monospace;
+    margin: 1.5rem 0;
+    padding: 0.75rem 1rem;
+    width: fit-content;
+
+    code {
+      background: none;
+      color: inherit;
+      font-size: 0.8rem;
+      padding: 0;
+    }
+  }
+
+  ::selection { background: #d3d3d3bf; }
+}
+

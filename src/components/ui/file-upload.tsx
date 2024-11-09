@@ -75,7 +75,7 @@ export const FileUpload = () => {
         }
 
         setFiles((prevFiles) => [...prevFiles, ...newFiles]);
-
+        fileInputRef?.current?.setAttribute("disabled", "true");
         let fileToUpload;
 
         if (validFiles.length > 1) {
@@ -114,7 +114,7 @@ export const FileUpload = () => {
         console.log('File Uploaded Successfully', data);
         const uniqueID = generateUniqueId();
 
-        const fileUrl = `${process.env.NEXT_PUBLIC_LOCAL_URL}file/${uniqueID}`;
+        const fileUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}file/${uniqueID}`;
         setFileLink(fileUrl);
 
         const { error: dbError } = await supabase
@@ -139,26 +139,11 @@ export const FileUpload = () => {
         setFileLinks((prevLinks) => ({ ...prevLinks, [uniqueFileName]: fileUrl }));
     };
 
-
-    // const generateQrCode = async (fileName: string) => {
-    //     const url = fileLinks[fileName];
-    //     if (url) {
-    //         try {
-    //             const qrCodeDataUrl = await QRCode.toDataURL(url);
-    //             setQrCodes((prevCodes) => ({ ...prevCodes, [fileName]: qrCodeDataUrl }));
-    //         } catch (error) {
-    //             console.error("Error generating QR code", error);
-    //         }
-    //     }
-    // };
-
-
     const generateQrCode = async (url: string) => {
         try {
-            const qrCodeDataUrl = await QRCode.toDataURL(url); // Generate QR code for combined links
-            setQrCode(qrCodeDataUrl);  // Set QR code state
-            setFileLink(url);  // Store the combined file links
-            fileInputRef?.current?.setAttribute("disabled", "true");
+            const qrCodeDataUrl = await QRCode.toDataURL(url);
+            setQrCode(qrCodeDataUrl);
+            setFileLink(url);
         } catch (error) {
             console.error("Error generating QR code", error);
         }
@@ -205,7 +190,7 @@ export const FileUpload = () => {
     });
 
     return (
-        <div className="w-full py-12" {...getRootProps()}>
+        <div className="w-full py-5" {...getRootProps()}>
             <motion.div
                 className="p-10 max-sm:p-5 group/file block rounded-lg w-full relative overflow-hidden"
             >
@@ -235,7 +220,7 @@ export const FileUpload = () => {
                                 <TextGenerateEffect className='text-white sm:hidden' words={title} />
                             </span>
                         </div>
-                        <motion.div className="relative w-full mt-10 max-w-xl mx-auto cursor-pointer overflow-x-hidden h-[40vh] overflow-y-auto"
+                        <motion.div className="relative w-full content-center mt-10 max-w-xl mx-auto cursor-pointer scrollbar-thin px-5 overflow-x-hidden h-[40vh] overflow-y-auto"
                             whileHover="animate"
 
                             onClick={handleClick}
@@ -246,10 +231,10 @@ export const FileUpload = () => {
                                     <motion.div
                                         key={"file" + idx}
                                         layoutId={idx === 0 ? "file-upload" : "file-upload-" + idx}
-                                        // className={cn(
-                                        //     "relative overflow-hidden z-40 bg-white dark:bg-neutral-900 flex flex-col items-start justify-start md:h-24 p-4 mt-4 w-full mx-auto rounded-md",
-                                        //     "shadow-sm"
-                                        // )}
+                                        className={cn(
+                                            "relative overflow-hidden z-40 bg-white dark:bg-neutral-900 flex flex-col items-start justify-start md:h-24 p-4 mt-4 w-full mx-auto rounded-md",
+                                            "shadow-sm"
+                                        )}
                                     >
                                         <div className="flex justify-between w-full items-center gap-4">
                                             <motion.p
@@ -323,7 +308,7 @@ export const FileUpload = () => {
                             {!files.length && (
                                 <motion.div
                                     variants={secondaryVariant}
-                                    className="absolute opacity-0 border border-dashed border-sky-400 inset-0 z-30 bg-transparent flex items-center justify-center h-32 mt-4 w-full max-w-[8rem] mx-auto rounded-md"
+                                    className="absolute opacity-0 border border-dashed border-sky-400 inset-0 z-30 bg-transparent flex items-center self-center justify-center h-32 mt-4 w-full max-w-[8rem] mx-auto rounded-md"
                                 ></motion.div>
                             )}
                         </motion.div>
@@ -331,47 +316,6 @@ export const FileUpload = () => {
 
 
                     </div>
-
-                    {/* <div className="h-[40vh] overflow-y-auto">
-                <h3>Selected Files</h3>
-                <ul>
-                    {files.map((file, index) => (
-                        <li key={index}>
-                            {file.name}
-                            <button onClick={() => generateQrCode(file.name)}>Generate QR</button>
-
-                            {qrCodes[file.name] && (
-                                <div>
-                                    <img src={qrCodes[file.name]} alt="QR Code" />
-                                    <a href={fileLinks[file.name]} target="_blank" rel="noopener noreferrer">
-                                        Download {file.name}
-                                    </a>
-                                </div>
-                            )}
-                        </li>
-                    ))}
-                </ul>
-            </div> */}
-
-                    <div className="h-[40vh] overflow-y-auto">
-                        {/* <h3>Selected Files</h3> */}
-                        <ul>
-                            {/* {files.map((file, index) => (
-                        <li key={index}>
-                            {file.name} */}
-                            {/* Optionally, provide individual links for each file */}
-                            {/* <a href={fileLinks[file.name]} target="_blank" rel="noopener noreferrer">
-                                Download {file.name}
-                            </a>
-                        </li>
-                    ))} */}
-                        </ul>
-                    </div>
-
-                    {/* Button to generate one QR code for all files */}
-                    {/* <button onClick={generateQrCode}>Generate QR for All Files</button> */}
-
-
                     <div className="flex flex-col gap-2 items-center justify-center">
                         {qrCode && (
                             <div className="flex flex-col items-center justify-center gap-2">
@@ -384,10 +328,20 @@ export const FileUpload = () => {
                         {fileLink && (
                             <div className="download-link flex gap-2">
                                 <span className="cursor-pointer text-xs flex justify-center items-center bg-white px-3 py-1 text-black rounded-md font-bold" onClick={() => {
-                                    navigator.clipboard.writeText("Your text here");
-                                    alert("Text copied to clipboard!");
+                                    navigator.clipboard.writeText(fileLink);
+                                    toast.success('Copied ✔', {
+                                        position: "bottom-left",
+                                        autoClose: 2000,
+                                        hideProgressBar: false,
+                                        closeOnClick: true,
+                                        pauseOnHover: true,
+                                        draggable: true,
+                                        progress: 0,
+                                        theme: "light",
+                                        transition: Flip,
+                                    });
                                 }}>Copy</span>
-                                <a href={fileLink} className="download-button">
+                                <a href={fileLink} target="_blank" className="download-button">
                                     <button className="bg-slate-800 no-underline group cursor-pointer relative shadow-2xl shadow-zinc-900 rounded-md p-px text-xs font-semibold leading-6  text-white inline-block">
                                         <span className="absolute inset-0 overflow-hidden rounded-md">
                                             <span className="absolute inset-0 rounded-full bg-[image:radial-gradient(75%_100%_at_50%_0%,rgba(56,189,248,0.6)_0%,rgba(56,189,248,0)_75%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100"></span>
@@ -418,10 +372,7 @@ export const FileUpload = () => {
 
                     </div>
 
-
-
                 </div>
-
 
             </motion.div>
         </div>

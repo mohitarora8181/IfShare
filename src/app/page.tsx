@@ -35,7 +35,7 @@ const HomePage = () => {
 
   return (
     <>
-      <div className="w-full bg-black flex flex-col items-center justify-center text-white min-h-full overflow-y-hidden ">
+      <div className="w-full bg-black flex flex-col items-center text-white min-h-full overflow-y-hidden ">
         <div className="w-full flex flex-col items-center">
           <div className='w-full  min-h-[50vh] '>
             <FileUpload />
@@ -46,27 +46,11 @@ const HomePage = () => {
               <TextRevealCard
                 text="End To End Encryption"
                 revealText="All About Privacy"
-              >
-                <TextRevealCardTitle>
-                  Your Privacy Matters.
-                </TextRevealCardTitle>
-                <TextRevealCardDescription>
-                  We ensures that only the sender and the recipient can access the content of the communication.
-                </TextRevealCardDescription>
-              </TextRevealCard>
-
-
+              />
               <TextRevealCard
                 text="Amazingly Fast"
                 revealText="High Speed File Sharing"
-              >
-                <TextRevealCardTitle>
-                  Blazing Fast Speeds.
-                </TextRevealCardTitle>
-                <TextRevealCardDescription>
-                  Experience blazing fast speed that delivers unmatched performance, ensuring seamless access to your data.
-                </TextRevealCardDescription>
-              </TextRevealCard>
+              />
             </div>
 
             <div className="flex absolute bottom-10 left-1/2 -translate-x-1/2">

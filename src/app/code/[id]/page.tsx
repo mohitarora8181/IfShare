@@ -98,7 +98,7 @@ const page = () => {
           onChange={(value: any, e) => setEditorText(value)}
           value={editorText}
         />
-        <div className='bg-black text-white w-1/4 h-full bottom-0 right-0'>
+        <div className='bg-black text-white w-1/4 h-full bottom-0 right-0 max-sm:hidden'>
           <div className='w-full h-1/2 p-5'>
             <div className='w-full flex gap-2 justify-around align-middle'>
               <p className='w-full text-[#67e8f9] pb-2 self-center'>Languages</p>
