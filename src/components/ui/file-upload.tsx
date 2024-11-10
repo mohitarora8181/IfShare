@@ -196,11 +196,9 @@ export const FileUpload = ({ showReveal }: { showReveal: Function }) => {
                 <div className="flex flex-col gap-8 sm:flex-row items-center justify-center w-full min-h-[30vh]">
                     <div className="flex flex-col w-[50vw] max-sm:w-full p-1">
                         <div className="flex flex-col text-center items-center">
-                            <p className="font-anton bg-gradient-to-r from-cyan-500 to-blue-500 w-[10vw] max-sm:w-full text-[0.75rem] rounded-md">
-                                Upload file
-                            </p>
-
-
+                            <div className="flex h-10 justify-center w-full animate-pulse">
+                                <img className="object-contain" src="/flixker_logo.png" />
+                            </div>
                             <span className="relative text-white z-20 font-sans font-normal dark:text-neutral-400 text-base mt-2">
                                 <TextGenerateEffect className='text-white sm:flex hidden' words={words} />
                                 <TextGenerateEffect className='text-white sm:hidden' words={title} />

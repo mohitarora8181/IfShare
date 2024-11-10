@@ -103,7 +103,7 @@ const page = () => {
       <div className='w-full pt-3'>
         <div className='w-full h-16 bg-black flex justify-between p-3 px-5 align-middle rounded-full pr-10 max-sm:pr-5'>
           <a href='/' className='overflow-hidden rounded-full h-12 w-12 self-center'>
-            <img className='object-cover' src='/logo.jpg' />
+            <img className='object-cover' src='/logo.png' />
           </a>
           <div className='flex gap-5'>
             <motion.button
