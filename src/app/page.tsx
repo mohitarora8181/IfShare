@@ -6,12 +6,10 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { AnimatedTooltip } from '../components/ui/animated-tooltip';
 import something from "@/@/assets/1730644219432_do.jpg"
-import { TextRevealCard, TextRevealCardDescription, TextRevealCardTitle } from '../components/ui/text-reveal-card';
+import { TextRevealCard } from '../components/ui/text-reveal-card';
 import { motion } from 'framer-motion'
-import { Button } from '../components/ui/moving-border-button';
-import { CodeIcon, FileTextIcon } from '@radix-ui/react-icons';
 import { generateUniqueId } from '../lib/utils';
-
+import { WavyBackground } from '../components/ui/wavy-background';
 
 
 const people = [
@@ -30,6 +28,8 @@ const people = [
 ];
 
 
+
+
 const HomePage = () => {
   const [isMounted, setMounted] = useState(false);
   const [uniqueID, setUniqueID] = useState("");
@@ -39,43 +39,55 @@ const HomePage = () => {
     setUniqueID(generateUniqueId());
   }, []);
 
+
   return (
     <>
-      <div className={`w-full bg-black flex flex-col items-center text-white min-h-full overflow-y-hidden ${!isMounted && "justify-center"}`}>
-        <div className="w-full flex flex-col items-center">
-          <div className='w-full  min-h-[30vh]'>
+    <div className=''>
+      <WavyBackground className='w-[100vw] '>
+        <motion.div
+          initial={{ opacity: 0.0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{
+            delay: 0.3,
+            duration: 0.8,
+            ease: "easeInOut",
+          }}
+          className="relative flex flex-col gap-4 items-center justify-center px-4"
+        >
+          <div className='w-full'>
             <FileUpload showReveal={setMounted} />
           </div>
-          <div className='w-full flex justify-between px-10 max-sm:px-5 max-sm:gap-5 absolute top-20 max-sm:top-auto max-sm:bottom-10'>
-            <Button className='flex flex-col justify-center'>
-              <a href={`/code/${uniqueID}`} className='flex w-full h-full justify-center align-middle whitespace-nowrap gap-2 cursor-pointer select-none'>
-                <p className='self-center'>Code Share</p> <CodeIcon className='self-center' width={25} height={25} />
-              </a>
-            </Button>
-            <Button className='flex flex-col justify-center'>
-              <a href={`/notes/${uniqueID}`} className='flex w-full h-full justify-center align-middle whitespace-nowrap gap-2 cursor-pointer select-none'>
-                <p className='self-center'>Notes Share</p><FileTextIcon className='self-center' width={25} height={25} />
-              </a>
-            </Button>
-          </div>
-          {isMounted && <motion.div className='flex mt-[-6vh] pl-10 w-full text-white'>
-            <div className='flex w-full justify-between p-4  max-sm:hidden'>
-              <TextRevealCard
-                text="End To End Encryption"
-                revealText="All About Privacy"
-              />
-              <TextRevealCard
-                text="Amazingly Fast"
-                revealText="High Speed File Sharing"
-                className='ml-10'
-              />
-            </div>
 
-            <div className="flex absolute bottom-10 left-1/2 -translate-x-1/2 max-sm:hidden">
-              <AnimatedTooltip items={people} />
-            </div>
-          </motion.div>}
+
+          <div className='flex absolute bottom-[10rem] gap-10 z-50'>
+          <a href={`/code/${uniqueID}`}  className="relative border-2 rounded-lg text-xl lg:text-[1.3vw] px-4 lg:px-[1.5vw] py-3 font-semibold bg-transparent text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-green-400 border-[3px] border-transparent border-gradient-to-r from-cyan-500 to-green-400">
+            Code Share
+          </a>
+
+          <a href={`/notes/${uniqueID}`}  className="relative border-2 rounded-lg text-xl lg:text-[1.3vw] px-4 lg:px-[1.5vw] py-3 font-semibold bg-transparent text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-green-400 border-[3px] border-transparent border-gradient-to-r from-cyan-500 to-green-400">
+            Notes Share
+          </a>
+          </div>
+
+          <div className='flex w-[100vw] justify-between p-4  max-sm:hidden'>
+            <TextRevealCard
+              text="End To End Encryption"
+              revealText="All About Privacy"
+            />
+            <TextRevealCard
+              text="Amazingly Fast"
+              revealText="High Speed File Sharing"
+              className='ml-10'
+            />
+          </div>
+        </motion.div>
+
+      </WavyBackground>
+      <div className="w-full flex flex-col items-center">
+        <div className="flex absolute bottom-20 left-1/2 -translate-x-1/2  z-30">
+          <AnimatedTooltip items={people} />
         </div>
+      </div>
       </div>
       <ToastContainer />
     </>

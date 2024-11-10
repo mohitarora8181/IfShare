@@ -10,6 +10,7 @@ import { useParams } from 'next/navigation'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Cross1Icon, UploadIcon } from '@radix-ui/react-icons'
 import QRCode from 'qrcode'
+import { WavyBackground } from '@/@/components/ui/wavy-background'
 
 const page = () => {
 
@@ -93,7 +94,8 @@ const page = () => {
     }, [editor]);
 
     return (
-        <div id='notes-editor' className='bg-gray-800 w-full h-full flex-col px-20 max-sm:px-1'>
+        <WavyBackground>
+        <div id='notes-editor' className='w-[100vw] h-full flex flex-col items-center justify-center mt-10 px-20 max-sm:px-1'>
             <div className='w-full pt-3'>
                 <div className='w-full h-16 bg-black flex justify-between p-3 px-5 align-middle rounded-full'>
                     <a href='/' className='overflow-hidden rounded-full h-12 w-12 self-center'>
@@ -159,6 +161,7 @@ const page = () => {
                 <EditorContent editor={editor} />
             </div>
         </div>
+        </WavyBackground>
     )
 }
 

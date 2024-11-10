@@ -113,7 +113,7 @@ export const FileUpload = ({ showReveal }: { showReveal: Function }) => {
         console.log('File Uploaded Successfully', data);
         const uniqueID = generateUniqueId();
 
-        const fileUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}file/${uniqueID}`;
+        const fileUrl = `${process.env.NEXT_PUBLIC_LOCAL_URL}file/${uniqueID}`;
         setFileLink(fileUrl);
 
         const { error: dbError } = await supabase
@@ -176,7 +176,7 @@ export const FileUpload = ({ showReveal }: { showReveal: Function }) => {
     });
 
     return (
-        <div className="w-full py-5" {...getRootProps()}>
+        <div className="w-full h-[50vh]" {...getRootProps()}>
             <motion.div
                 className="p-5 max-sm:p-5 group/file block rounded-lg w-full relative overflow-hidden"
             >
@@ -196,15 +196,17 @@ export const FileUpload = ({ showReveal }: { showReveal: Function }) => {
                 <div className="flex flex-col gap-8 sm:flex-row items-center justify-center w-full min-h-[30vh]">
                     <div className="flex flex-col w-[50vw] max-sm:w-full p-1">
                         <div className="flex flex-col text-center items-center">
-                            <div className="flex h-10 justify-center w-full animate-pulse">
-                                <img className="object-contain" src="/flixker_logo.png" />
-                            </div>
-                            <span className="relative text-white z-20 font-sans font-normal dark:text-neutral-400 text-base mt-2">
-                                <TextGenerateEffect className='text-white sm:flex hidden' words={words} />
-                                <TextGenerateEffect className='text-white sm:hidden' words={title} />
+                            <div className="flex h-10 justify-center w-full">
+                                {/* <img className="object-contain" src="/flixker_logo.png" /> */}
+                                <p className="bg-gradient-to-r from-cyan-500 to-green-400 bg-clip-text text-transparent font-bubble text-4xl">
+                                    IFSHARE
+                                </p>                            </div>
+                            <span className="relative text-white z-20 font-sans font-normal dark:text-neutral-400 text-base">
+                                <TextGenerateEffect className='text-white md:flex hidden' words={words} />
+                                <TextGenerateEffect className='text-white md:hidden' words={title} />
                             </span>
                         </div>
-                        <motion.div className="relative w-full content-center mt-10 max-w-xl mx-auto cursor-pointer scrollbar-thin px-5 max-sm:px-1 overflow-x-hidden h-[30vh] max-sm:h-[50vh] overflow-y-auto"
+                        <motion.div className="relative w-full content-center max-w-xl mx-auto cursor-pointer scrollbar-thin px-5 max-sm:px-1 overflow-x-hidden h-[30vh] max-sm:h-[50vh] overflow-y-auto"
                             whileHover="animate"
 
                             onClick={handleClick}
@@ -216,7 +218,7 @@ export const FileUpload = ({ showReveal }: { showReveal: Function }) => {
                                         key={"file" + idx}
                                         layoutId={idx === 0 ? "file-upload" : "file-upload-" + idx}
                                         className={cn(
-                                            "relative select-none overflow-hidden z-40 bg-white dark:bg-neutral-900 flex flex-col items-start justify-start md:h-24 p-4 mt-4 w-full mx-auto rounded-md",
+                                            "relative select-none overflow-hidden z-40 bg-white dark:bg-neutral-900 flex flex-col items-start justify-start md:h-24 p-4 mt-4 w-[20rem] mx-auto rounded-md",
                                             "shadow-sm",
                                             `${!qrCode && "animate-pulse"}`
                                         )}

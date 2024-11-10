@@ -81,6 +81,14 @@ const config = {
           '0%, 100%': { borderColor: 'transparent', borderWidth: '2px' },
           '50%': { borderColor: '#3b82f6', borderWidth: '4px' },
         },
+        aurora: {
+          from: {
+            backgroundPosition: "50% 50%, 50% 50%",
+          },
+          to: {
+            backgroundPosition: "350% 50%, 350% 50%",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -88,11 +96,13 @@ const config = {
         scroll:
           "scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite",
         borderPulse: 'borderPulse 2s ease-in-out infinite',
+        aurora: "aurora 60s linear infinite",
       },
     },
     fontFamily: {
       anton: ["Anton SC", "sans-serif"],
-      kanit: ["Kanit", "sans-serif"]
+      kanit: ["Kanit", "sans-serif"],
+      bubble : ["Rubik Bubbles" , "sans-serif"]
     }
   },
   plugins: [require("tailwindcss-animate"), addVariablesForColors, require("tailwind-scrollbar")],
