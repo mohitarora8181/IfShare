@@ -15,7 +15,7 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: "IfShare",
-  description: "Sharing Files with Ease :)",
+  description: "Sharing Media with Ease :)",
 };
 
 export default function RootLayout({
