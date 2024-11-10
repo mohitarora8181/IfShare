@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from "@/@/lib/utils";
+import { cn, generateUniqueId } from "@/@/lib/utils";
 import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { IconUpload } from "@tabler/icons-react";
@@ -12,6 +12,7 @@ import { Flip, toast } from "react-toastify";
 import CryptoJS from 'crypto-js';
 import { TextGenerateEffect } from "./text-generate-effect";
 import JSZip from 'jszip';  // Import JSZip
+import { ReloadIcon } from "@radix-ui/react-icons";
 
 
 const mainVariant = {
@@ -43,12 +44,10 @@ const title = `
 "Upload and share files seamlessly!"
 `;
 
-export const FileUpload = () => {
+export const FileUpload = ({ showReveal }: { showReveal: Function }) => {
     const [files, setFiles] = useState<File[]>([]);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const fileRef = useRef<HTMLDivElement>(null);
-    const [qrCodes, setQrCodes] = useState<{ [key: string]: string }>({});
-    const [fileLinks, setFileLinks] = useState<{ [key: string]: string }>({});
     const [qrCode, setQrCode] = useState<string>();
     const [fileLink, setFileLink] = useState<string>();
 
@@ -135,8 +134,6 @@ export const FileUpload = () => {
         }
 
         await generateQrCode(fileUrl);
-
-        setFileLinks((prevLinks) => ({ ...prevLinks, [uniqueFileName]: fileUrl }));
     };
 
     const generateQrCode = async (url: string) => {
@@ -147,37 +144,26 @@ export const FileUpload = () => {
         } catch (error) {
             console.error("Error generating QR code", error);
         }
+        showReveal(false);
     };
 
 
-
-
-    function generateUniqueId() {
-        return Array.from({ length: 6 }, () => {
-            const randomChar = Math.floor(Math.random() * 62);
-            return randomChar < 10
-                ? String.fromCharCode(randomChar + 48)
-                : randomChar < 36
-                    ? String.fromCharCode(randomChar + 87)
-                    : String.fromCharCode(randomChar + 29);
-        }).join('');
-    }
-
-
     useEffect(() => {
-        if (fileRef.current) {
-            gsap.to(fileRef.current, {
-                rotate: 720,
-                color: "#000000",
-                yoyo: true,
-                duration: 2,
-                scale: 1,
-                stagger: 0.2,
-                rotateY: 180,
-                attr: { d: "M10 10 H 90 V 90 H 10 L 10 10" },
-                ease: "Power1.inOut"
-            });
-        }
+        setTimeout(() => {
+            if (fileRef.current) {
+                gsap.to(fileRef.current, {
+                    rotate: 720,
+                    color: "#000000",
+                    yoyo: true,
+                    duration: 2,
+                    scale: 1,
+                    stagger: 0.2,
+                    rotateY: 180,
+                    attr: { d: "M10 10 H 90 V 90 H 10 L 10 10" },
+                    ease: "Power1.inOut"
+                });
+            }
+        }, 1000);
     }, []);
 
     const { getRootProps, isDragActive } = useDropzone({
@@ -192,7 +178,7 @@ export const FileUpload = () => {
     return (
         <div className="w-full py-5" {...getRootProps()}>
             <motion.div
-                className="p-10 max-sm:p-5 group/file block rounded-lg w-full relative overflow-hidden"
+                className="p-5 max-sm:p-5 group/file block rounded-lg w-full relative overflow-hidden"
             >
                 <input
                     ref={fileInputRef}
@@ -207,8 +193,8 @@ export const FileUpload = () => {
                     className="hidden"
                 />
 
-                <div className="flex flex-col sm:flex-row items-center justify-center w-full min-h-[40vh]">
-                    <div className="flex flex-col w-[50vw] max-sm:w-full">
+                <div className="flex flex-col gap-8 sm:flex-row items-center justify-center w-full min-h-[30vh]">
+                    <div className="flex flex-col w-[50vw] max-sm:w-full p-1">
                         <div className="flex flex-col text-center items-center">
                             <p className="font-anton bg-gradient-to-r from-cyan-500 to-blue-500 w-[10vw] max-sm:w-full text-[0.75rem] rounded-md">
                                 Upload file
@@ -220,7 +206,7 @@ export const FileUpload = () => {
                                 <TextGenerateEffect className='text-white sm:hidden' words={title} />
                             </span>
                         </div>
-                        <motion.div className="relative w-full content-center mt-10 max-w-xl mx-auto cursor-pointer scrollbar-thin px-5 overflow-x-hidden h-[40vh] overflow-y-auto"
+                        <motion.div className="relative w-full content-center mt-10 max-w-xl mx-auto cursor-pointer scrollbar-thin px-5 max-sm:px-1 overflow-x-hidden h-[30vh] max-sm:h-[50vh] overflow-y-auto"
                             whileHover="animate"
 
                             onClick={handleClick}
@@ -232,8 +218,9 @@ export const FileUpload = () => {
                                         key={"file" + idx}
                                         layoutId={idx === 0 ? "file-upload" : "file-upload-" + idx}
                                         className={cn(
-                                            "relative overflow-hidden z-40 bg-white dark:bg-neutral-900 flex flex-col items-start justify-start md:h-24 p-4 mt-4 w-full mx-auto rounded-md",
-                                            "shadow-sm"
+                                            "relative select-none overflow-hidden z-40 bg-white dark:bg-neutral-900 flex flex-col items-start justify-start md:h-24 p-4 mt-4 w-full mx-auto rounded-md",
+                                            "shadow-sm",
+                                            `${!qrCode && "animate-pulse"}`
                                         )}
                                     >
                                         <div className="flex justify-between w-full items-center gap-4">
@@ -263,14 +250,14 @@ export const FileUpload = () => {
                                             >
                                                 {file.type}
                                             </motion.p>
-                                            <motion.p
+                                            {qrCode ? <motion.p
                                                 initial={{ opacity: 0 }}
                                                 animate={{ opacity: 1 }}
                                                 layout
                                             >
                                                 modified{" "}
                                                 {new Date(file.lastModified).toLocaleDateString()}
-                                            </motion.p>
+                                            </motion.p> : <ReloadIcon color="black" className="animate-spin mr-5" />}
                                         </div>
 
 
@@ -316,17 +303,17 @@ export const FileUpload = () => {
 
 
                     </div>
-                    <div className="flex flex-col gap-2 items-center justify-center">
+                    <div className="flex flex-col gap-2 items-center content-center justify-center">
                         {qrCode && (
-                            <div className="flex flex-col items-center justify-center gap-2">
+                            <motion.div className="flex flex-col items-center justify-center gap-2">
                                 <img className="rounded-md" src={qrCode} alt="QR Code" />
                                 <p>Scan the QR code to access all files.</p>
-                            </div>
+                            </motion.div>
 
                         )}
 
                         {fileLink && (
-                            <div className="download-link flex gap-2">
+                            <div className="download-link flex gap-2 overflow-hidden">
                                 <span className="cursor-pointer text-xs flex justify-center items-center bg-white px-3 py-1 text-black rounded-md font-bold" onClick={() => {
                                     navigator.clipboard.writeText(fileLink);
                                     toast.success('Copied ✔', {
@@ -378,22 +365,3 @@ export const FileUpload = () => {
         </div>
     );
 };
-
-export function GridPattern() {
-    const columns = 41;
-    const rows = 11;
-    return (
-        <div className="flex bg-gray-100 dark:bg-neutral-900 flex-shrink-0">
-            {Array.from({ length: rows }).map((_, rowIndex) => (
-                <div className="flex flex-col flex-shrink-0" key={rowIndex}>
-                    {Array.from({ length: columns }).map((_, colIndex) => (
-                        <div
-                            className="w-3 h-3 m-1 bg-white dark:bg-neutral-600 rounded-full"
-                            key={colIndex}
-                        />
-                    ))}
-                </div>
-            ))}
-        </div>
-    );
-}

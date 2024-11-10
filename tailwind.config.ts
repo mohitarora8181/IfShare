@@ -11,7 +11,7 @@ const config = {
     './components/**/*.{ts,tsx}',
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
-	],
+  ],
   prefix: "",
   theme: {
     container: {
@@ -57,7 +57,7 @@ const config = {
           foreground: "hsl(var(--card-foreground))",
         },
       },
-      
+
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
@@ -77,20 +77,25 @@ const config = {
             transform: "translate(calc(-50% - 0.5rem))",
           },
         },
+        borderPulse: {
+          '0%, 100%': { borderColor: 'transparent', borderWidth: '2px' },
+          '50%': { borderColor: '#3b82f6', borderWidth: '4px' },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         scroll:
           "scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite",
+        borderPulse: 'borderPulse 2s ease-in-out infinite',
       },
     },
-    fontFamily : {
-      anton : ["Anton SC" , "sans-serif"],
-      kanit : ["Kanit" , "sans-serif"]
+    fontFamily: {
+      anton: ["Anton SC", "sans-serif"],
+      kanit: ["Kanit", "sans-serif"]
     }
   },
-  plugins: [require("tailwindcss-animate"), addVariablesForColors,require("tailwind-scrollbar")],
+  plugins: [require("tailwindcss-animate"), addVariablesForColors, require("tailwind-scrollbar")],
 } satisfies Config
 
 function addVariablesForColors({ addBase, theme }: any) {
@@ -98,7 +103,7 @@ function addVariablesForColors({ addBase, theme }: any) {
   let newVars = Object.fromEntries(
     Object.entries(allColors).map(([key, val]) => [`--${key}`, val])
   );
- 
+
   addBase({
     ":root": newVars,
   });

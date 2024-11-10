@@ -15,8 +15,8 @@ const Toolbar = ({ editor }: Props) => {
   return (
     <div
       className="px-4 py-3 rounded-tl-md rounded-tr-md flex justify-center items-center
-    gap-5 w-full h-[10vh] border">
-      <div className="flex justify-start items-center gap-5">
+    gap-5 w-full h-[10vh] max-sm:h-[20vh] border">
+      <div className="flex justify-start items-center gap-5 max-sm:flex-wrap">
         <IconButton runState={() => editor.chain().focus().toggleBold()} isActive={editor.isActive("bold")} Icon={FontBoldIcon} />
         <IconButton runState={() => editor.chain().focus().toggleItalic()} isActive={editor.isActive("italic")} Icon={FontItalicIcon} />
         <IconButton runState={() => editor.chain().focus().toggleUnderline()} isActive={editor.isActive("underline")} Icon={UnderlineIcon} />
