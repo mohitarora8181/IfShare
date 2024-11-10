@@ -63,6 +63,7 @@ export const FileUpload = ({ showReveal }: { showReveal: Function }) => {
         const validFiles = newFiles.filter(file => {
             if (file.size > maxFileSize) {
                 console.error(`File size exceeds limit: ${file.name} (${file.size / (1024 * 1024)} MB)`);
+                toast.error("File limit exceeds !");
                 return false;
             }
             return true;
@@ -73,7 +74,7 @@ export const FileUpload = ({ showReveal }: { showReveal: Function }) => {
             return;
         }
 
-        setFiles((prevFiles) => [...prevFiles, ...newFiles]);
+        setFiles((prevFiles) => [...prevFiles, ...validFiles]);
         fileInputRef?.current?.setAttribute("disabled", "true");
         let fileToUpload;
 
@@ -204,7 +205,7 @@ export const FileUpload = ({ showReveal }: { showReveal: Function }) => {
                                 <TextGenerateEffect className='text-white sm:hidden' words={title} />
                             </span>
                         </div>
-                        <motion.div className="relative w-full content-center mt-10 max-w-xl mx-auto cursor-pointer scrollbar-thin px-5 max-sm:px-1 overflow-x-hidden h-[30vh] max-sm:h-[50vh] overflow-y-auto"
+                        <motion.div className={`relative w-full content-center mt-10 max-w-xl mx-auto cursor-pointer scrollbar-thin px-5 max-sm:px-1 overflow-x-hidden h-[30vh] max-sm:h-[50vh] ${files.length ? "overflow-y-auto" : "overflow-hidden"}`}
                             whileHover="animate"
 
                             onClick={handleClick}
