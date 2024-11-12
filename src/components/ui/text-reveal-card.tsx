@@ -6,11 +6,13 @@ import { cn } from "@/@/lib/utils";
 
 export const TextRevealCard = ({
   text,
+  texttwo,
   revealText,
   children,
   className,
 }: {
   text: string;
+  texttwo : string;
   revealText: string;
   children?: React.ReactNode;
   className?: string;
@@ -67,7 +69,7 @@ export const TextRevealCard = ({
       onTouchMove={touchMoveHandler}
       ref={cardRef}
       className={cn(
-        "w-[20rem] rounded-lg p-8 relative overflow-hidden",
+        "w-[20rem] text-white rounded-lg p-4 relative overflow-hidden",
         className
       )}
     >
@@ -111,10 +113,12 @@ export const TextRevealCard = ({
         ></motion.div> */}
 
         <div className=" overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,white,transparent)]">
-          <p className="text-base md:text-[1.5rem] py-10 font-bold bg-clip-text text-transparent bg-[#323238]">
+          <p className="text-base text-white/70 md:text-[1.5rem] py-4  font-bold bg-clip-text text-transparent bg-[#323238]">
             {text}
           </p>
           <MemoizedStars />
+          {texttwo}
+
         </div>
       </div>
     </div>

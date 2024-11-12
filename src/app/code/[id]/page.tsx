@@ -8,6 +8,7 @@ import { useParams } from 'next/navigation.js';
 import { Cross1Icon, UploadIcon } from '@radix-ui/react-icons';
 import { AnimatePresence, motion } from 'framer-motion'
 import QRCode from 'qrcode';
+import { WavyBackground } from '../../../components/ui/wavy-background.tsx'
 
 const page = () => {
   const [selectedLanguage, setLanguage] = useState('javascript');
@@ -99,17 +100,19 @@ const page = () => {
   }, []);
 
   return (
-    <div id='code-editor' className='bg-black h-full w-full relative overflow-hidden'>
+    <WavyBackground>
+    <div id='code-editor' className='h-full w-full relative overflow-hidden'>
       <div className='w-full pt-3'>
-        <div className='w-full h-16 bg-black flex justify-between p-3 px-5 align-middle rounded-full pr-10 max-sm:pr-5'>
-          <a href='/' className='overflow-hidden rounded-full h-12 w-12 self-center'>
-            <img className='object-cover' src='/logo.png' />
-          </a>
+        <div className='w-full h-16 flex justify-between p-3 px-5 align-middle rounded-full pr-10 max-sm:pr-5'>
+          <a href='/' className='self-center'>
+            <p className="bg-gradient-to-r from-cyan-500 to-green-400 bg-clip-text text-transparent font-bubble text-4xl">
+              IFSHARE
+            </p>                         </a>
           <div className='flex gap-5'>
             <motion.button
               whileTap={{ scale: 0.90 }}
               whileHover={{ scale: 1.1, color: "white", backgroundColor: "black", border: "1px solid white" }}
-              className='bg-white rounded-full text-black py-1 px-4 flex whitespace-nowrap self-center gap-2'
+              className='bg-gradient-to-r from-cyan-500 to-green-400 rounded-md font-anton text-black py-1 px-4 flex whitespace-nowrap self-center gap-2'
               onClick={async () => {
                 await fetch("/api/code/", {
                   method: "POST",
@@ -133,7 +136,7 @@ const page = () => {
                 return;
               }
               setModalIsOpen(true);
-            }} whileTap={{ scale: 0.90 }} className='bg-white px-3 rounded-full'>
+            }} whileTap={{ scale: 0.90 }} className='bg-gradient-to-r from-cyan-500 to-green-400 rounded-md px-3'>
               <svg width="20" height="20" fill="black" className="bi bi-qr-code-scan" viewBox="0 0 16 16">
                 <path d="M0 .5A.5.5 0 0 1 .5 0h3a.5.5 0 0 1 0 1H1v2.5a.5.5 0 0 1-1 0zm12 0a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0V1h-2.5a.5.5 0 0 1-.5-.5M.5 12a.5.5 0 0 1 .5.5V15h2.5a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5v-3a.5.5 0 0 1 .5-.5m15 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1 0-1H15v-2.5a.5.5 0 0 1 .5-.5M4 4h1v1H4z" />
                 <path d="M7 2H2v5h5zM3 3h3v3H3zm2 8H4v1h1z" />
@@ -145,9 +148,11 @@ const page = () => {
           </div>
         </div>
       </div>
-      <div className='flex justify-between w-full h-full pt-3'>
+      <div className='flex justify-between gap-20 w-full h-full pt-4'>
         <Editor
-          height="100vh"
+          height="85vh"
+          width={"70vw"}
+          className='rounded-[1rem]'
           theme={selectedTheme}
           language={selectedLanguage}
           onChange={(value: any, e) => setEditorText(value)}
@@ -160,7 +165,7 @@ const page = () => {
               animate={{ x: 0 }}
               exit={{ x: "100vh" }}
               transition={{ duration: 0.5 }}
-              className="flex absolute right-3 flex-col items-center justify-center gap-2 bg-gray-800 rounded-xl">
+              className="flex absolute right-3 flex-col items-center justify-center gap-2 rounded-[1rem]">
               <div className='flex relative flex-col items-center justify-center gap-2 bg-gray-800 p-5 rounded-xl'>
                 <img className="rounded-md" src={qrCode} alt="QR Code" />
                 <p className='text-gray-300'>Scan the QR code to access all files.</p>
@@ -170,10 +175,10 @@ const page = () => {
 
           )}
         </AnimatePresence>
-        <div className='bg-black text-white w-1/4 h-full bottom-0 right-0 max-sm:hidden'>
+        <div className=' font-anton text-white w-1/4 h-full bottom-0 right-0 max-sm:hidden'>
           <div className='w-full h-1/2 p-5'>
             <div className='w-full flex gap-2 justify-around align-middle'>
-              <p className='w-full text-[#67e8f9] pb-2 self-center'>Languages</p>
+              <p className='w-full text-green-300 pb-2 self-center'>Languages</p>
               <input
                 type="text"
                 placeholder="Search language ..."
@@ -193,7 +198,7 @@ const page = () => {
             </ul>
           </div>
           <div className='w-full h-1/2 p-5'>
-            <p className='w-full text-[#67e8f9] pb-2'>Themes</p>
+            <p className='w-full text-green-300 pb-2'>Themes</p>
             <ul className='w-full h-60 p-5 overflow-y-scroll scrollbar-thin scrollbar-track-gray-800 scrollbar-thumb-stone-500 scrollbar-corner-neutral-500'>
               {supportedThemes.map((ele, index) => {
                 return <li key={ele.id + "-theme"} className={`${selectedTheme == ele.id || selectedTheme == ele.name ? "bg-gray-700" : ""} w-full p-2 text-white border-b border-gray-600 cursor-pointer hover:bg-gray-900`}
@@ -213,6 +218,7 @@ const page = () => {
         </div>
       </div>
     </div>
+    </WavyBackground>
   )
 }
 
