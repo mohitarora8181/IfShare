@@ -113,7 +113,7 @@ export const FileUpload = ({ showReveal }: { showReveal: Function }) => {
         console.log('File Uploaded Successfully', data);
         const uniqueID = generateUniqueId();
 
-        const fileUrl = `${process.env.NEXT_PUBLIC_LOCAL_URL}file/${uniqueID}`;
+        const fileUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}file/${uniqueID}`;
         setFileLink(fileUrl);
 
         const { error: dbError } = await supabase
