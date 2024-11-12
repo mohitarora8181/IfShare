@@ -82,7 +82,7 @@ const page = () => {
     };
     useEffect(() => {
         const getValue = async () => {
-            await fetch(`https://if-share.vercel.app/api/notes?id=${params.id}`, {
+            await fetch(`/api/notes?id=${params.id}`, {
                 method: "GET",
                 headers: {
                     'Content-Type': 'application/json'
@@ -128,7 +128,7 @@ const page = () => {
                                 whileHover={{ scale: 1.1, color: "white", backgroundColor: "black", border: "1px solid white" }}
                                 className='bg-gradient-to-r from-cyan-500 to-green-500 font-anton rounded-md text-black py-1 px-4 flex whitespace-nowrap self-center gap-2'
                                 onClick={async () => {
-                                    await fetch("https://if-share.vercel.app/api/notes/", {
+                                    await fetch("/api/notes/", {
                                         method: "POST",
                                         headers: {
                                             'Content-Type': "application/json"
