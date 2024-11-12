@@ -1,10 +1,15 @@
 import mongoose from "mongoose";
 import { NextRequest } from "next/server";
 
+let isConnected = false; 
+
 const connectDB = async () => {
-    await mongoose.connect(process.env.NEXT_PUBLIC_MONGO_URI!).then(() => {
-        console.log("MongoDb Database Connected");
-    })
+    if (!isConnected) {
+        await mongoose.connect(process.env.NEXT_PUBLIC_MONGO_URI!).then(() => {
+            console.log("MongoDB Database Connected");
+            isConnected = true; 
+        });
+    }
 };
 
 const codeSchema = new mongoose.Schema({
