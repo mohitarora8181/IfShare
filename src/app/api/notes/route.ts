@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 
 const connectDB = async () => {
     await mongoose.connect(process.env.NEXT_PUBLIC_MONGO_URI!).then(() => {
@@ -17,20 +17,18 @@ const NotesModel = mongoose.models.Notes || mongoose.model('Notes', codeSchema);
 export async function POST(req: NextRequest) {
     await connectDB();
 
-    const { id, value } = await req.json();
     try {
+        const { id, value } = await req.json();
+
         await NotesModel.updateOne(
             { id: id },
             { $set: { id, value } },
             { upsert: true }
         );
-        return new Response("done")
+        return new Response("Done", { status: 200 });
     } catch (error) {
-        console.log(error)
-        return new Response(
-            "Internal Sever error :- " + error, {
-            status: 500
-        })
+        console.error("POST Request Error:", error);
+        return new Response("Internal Server Error", { status: 500 });
     }
 }
 
