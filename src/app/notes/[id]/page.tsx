@@ -128,7 +128,7 @@ const page = () => {
                                 whileHover={{ scale: 1.1, color: "white", backgroundColor: "black", border: "1px solid white" }}
                                 className='bg-gradient-to-r from-cyan-500 to-green-500 font-anton rounded-md text-black py-1 px-4 flex whitespace-nowrap self-center gap-2'
                                 onClick={async () => {
-                                    await fetch("/api/notes/", {
+                                    await fetch("https://if-share.vercel.app/api/notes/", {
                                         method: "POST",
                                         headers: {
                                             'Content-Type': "application/json"
