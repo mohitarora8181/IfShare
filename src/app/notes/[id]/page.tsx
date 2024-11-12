@@ -82,7 +82,7 @@ const page = () => {
     };
     useEffect(() => {
         const getValue = async () => {
-            await fetch(`/api/notes?id=${params.id}`, {
+            await fetch(`https://if-share.vercel.app/api/notes?id=${params.id}`, {
                 method: "GET",
                 headers: {
                     'Content-Type': 'application/json'
