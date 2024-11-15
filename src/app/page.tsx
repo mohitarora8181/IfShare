@@ -20,11 +20,11 @@ const page = () => {
     }, []);
 
     const svgRef = useRef(null);
-    const pointerRef = useRef({
-        x: window.innerWidth / 2,
-        y: window.innerHeight / 2,
-    });
+    const pointerRef = useRef({ x: 0, y: 0 });
+
     useEffect(() => {
+        const pointer = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+        pointerRef.current = pointer;
         const ease = 0.75;
         const totalLines = 100;
         const svgns = "http://www.w3.org/2000/svg";
