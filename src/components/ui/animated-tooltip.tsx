@@ -8,6 +8,7 @@ import {
   useMotionValue,
   useSpring,
 } from "framer-motion";
+import { useDragControls } from "motion/react"
 
 export const AnimatedTooltip = ({
   items,
@@ -36,11 +37,16 @@ export const AnimatedTooltip = ({
     const halfWidth = event.target.offsetWidth / 2;
     x.set(event.nativeEvent.offsetX - halfWidth); // set the x value, which is then used in transform and rotate
   };
+  const controls = useDragControls()
+
 
   return (
     <>
       {items.map((item, idx) => (
-        <div
+        <motion.div
+          drag dragControls={controls}
+          animate={{ rotate:720000 }}
+          transition={{ duration: 30000, delay: 1, ease: "linear" }}
           className="-mr-4 relative group"
           key={item.name}
           onMouseEnter={() => setHoveredIndex(item.id)}
@@ -60,6 +66,7 @@ export const AnimatedTooltip = ({
                     damping: 10,
                   },
                 }}
+                drag dragControls={controls}
                 exit={{ opacity: 0, y: 20, scale: 0.6 }}
                 style={{
                   translateX: translateX,
@@ -85,7 +92,7 @@ export const AnimatedTooltip = ({
             alt={item.name}
             className="object-cover !m-0 !p-0 object-top rounded-full h-14 w-14 border-[.1em] group-hover:scale-105 group-hover:z-30 border-white  relative transition duration-500"
           />
-        </div>
+        </motion.div>
       ))}
     </>
   );
