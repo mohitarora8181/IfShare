@@ -19,8 +19,80 @@ const page = () => {
         setUniqueId(generateUniqueId());
     }, []);
 
+    const svgRef = useRef(null);
+    const pointerRef = useRef({
+        x: window.innerWidth / 2,
+        y: window.innerHeight / 2,
+    });
+
+    const ease = 0.75;
+    const totalLines = 100;
+
+    useEffect(() => {
+        const svgns = "http://www.w3.org/2000/svg";
+        const root = svgRef.current;
+        let leader: any = pointerRef.current;
+
+        const handleMouseMove = (event: any) => {
+            pointerRef.current.x = event.clientX;
+            pointerRef.current.y = event.clientY;
+        };
+
+        window.addEventListener("mousemove", handleMouseMove);
+
+        for (let i = 0; i < totalLines; i++) {
+            leader = createLine(leader, i);
+        }
+
+        function createLine(leader: any, i: any) {
+            const line = document.createElementNS(svgns, "line");
+            //@ts-ignore
+            root.appendChild(line);
+
+            gsap.set(line, { x: -15, y: -15, opacity: (totalLines - i) / totalLines });
+
+            gsap.to(line, {
+                duration: 1000,
+                x: "+=1",
+                y: "+=1",
+                repeat: -1,
+                modifiers: {
+                    x: function () {
+                        let posX = gsap.getProperty(line, "x");
+                        let leaderX = gsap.getProperty(leader, "x");
+                        //@ts-ignore
+                        const x = posX + (leaderX - posX) * ease;
+                        //@ts-ignore
+                        line.setAttribute("x2", leaderX - x);
+                        return x;
+                    },
+                    y: function () {
+                        let posY = gsap.getProperty(line, "y");
+                        let leaderY = gsap.getProperty(leader, "y");
+                        //@ts-ignore
+                        const y = posY + (leaderY - posY) * ease;
+                        //@ts-ignore
+                        line.setAttribute("y2", leaderY - y);
+                        return y;
+                    },
+                },
+            });
+
+            return line;
+        }
+
+        return () => {
+            window.removeEventListener("mousemove", handleMouseMove);
+            //@ts-ignore
+            gsap.killTweensOf(root.querySelectorAll("line"));
+            //@ts-ignore
+            root.innerHTML = "";
+        };
+    }, [ease, totalLines])
+
     return (
         <div className='w-full h-full'>
+            <svg className='absolute h-full w-full top-0 left-0' ref={svgRef}></svg>
             <div className='grid w-full h-full absolute' />
             <div className='w-full h-full flex gap-5'>
                 <div className='w-1/2 p-10 py-40'>
@@ -64,7 +136,7 @@ const page = () => {
                     </div>
                 </div>
             </div>
-            <footer className='w-full ocean'>
+            <footer className='w-full ocean absolute -bottom-10 left-0'>
                 <div className="wave"></div>
                 <div className="wave"></div>
             </footer>
