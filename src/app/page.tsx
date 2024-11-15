@@ -20,15 +20,14 @@ const page = () => {
     }, []);
 
     const svgRef = useRef(null);
-    const pointerRef = useRef({
-        x: window.innerWidth / 2,
-        y: window.innerHeight / 2,
-    });
-
-    const ease = 0.75;
-    const totalLines = 100;
-
     useEffect(() => {
+        const pointerRef = useRef({
+            x: window.innerWidth / 2,
+            y: window.innerHeight / 2,
+        });
+
+        const ease = 0.75;
+        const totalLines = 100;
         const svgns = "http://www.w3.org/2000/svg";
         const root = svgRef.current;
         let leader: any = pointerRef.current;
@@ -88,7 +87,7 @@ const page = () => {
             //@ts-ignore
             root.innerHTML = "";
         };
-    }, [ease, totalLines])
+    }, [])
 
     return (
         <div className='w-full h-full'>
