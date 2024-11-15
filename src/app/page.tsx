@@ -64,11 +64,9 @@ const page = () => {
                     </div>
                 </div>
             </div>
-            <footer className='w-full'>
-                <div className="ocean">
-                    <div className="wave"></div>
-                    <div className="wave"></div>
-                </div>
+            <footer className='w-full ocean'>
+                <div className="wave"></div>
+                <div className="wave"></div>
             </footer>
         </div>
     )

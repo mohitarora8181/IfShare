@@ -187,7 +187,7 @@ canvas {
 .ocean {
   width: 100%;
   position: absolute;
-  bottom: -50;
+  bottom: -80;
   left: 0;
   background: #dfdfdf;
   filter: grayscale();
@@ -197,7 +197,7 @@ canvas {
 .wave {
   background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/85486/wave.svg) repeat-x;
   position: absolute;
-  top: -198px;
+  top: -200px;
   width: 6400px;
   height: 158px;
   animation: wave 7s cubic-bezier(0.36, 0.45, 0.63, 0.53) infinite;
