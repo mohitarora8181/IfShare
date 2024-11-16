@@ -745,7 +745,7 @@ const page = () => {
         <div className='w-full h-full overflow-hidden relative' id='container'>
             <canvas />
             <div className='w-full px-10 py-5 flex justify-center absolute top-10'>
-                <div className='h-auto w-[80vh] grid grid-cols-7 select-none main-title'>
+                <div className='h-auto w-[80vh] max-sm:w-full grid grid-cols-7 select-none main-title'>
                     <img className='grayscale' draggable='false' src="/I.png" alt="I" />
                     <img className='grayscale' draggable='false' src="/F.png" alt="F" />
                     <img className='grayscale' draggable='false' src="/S.png" alt="S" />
@@ -754,18 +754,21 @@ const page = () => {
                     <img className='grayscale' draggable='false' src="/R.png" alt="R" />
                     <img className='grayscale' draggable='false' src="/E.png" alt="E" />
                 </div>
-                <p className='revealed-title py-2 select-none'>Upload and share your stuff seamlessly!</p>
+                <p className='revealed-title max-sm:text-xl max-sm:text-center py-2 select-none'>Upload and share your stuff seamlessly!</p>
             </div>
             <div className="h-[200px] w-full bg-fixed bg-bottom absolute bottom-20">
                 <div className="flex justify-center items-center px-4">
-                    <ul className="flex gap-10 h-[200px] max-w-6xl cursor-pointer">
-                        <motion.a whileTap={{ scale: 0.90 }} href={`/code/${uniqueID}`} className="flex-[2] hover:flex-[6] transition-all duration-500 ease-out">
+                    <ul className="flex gap-10 max-sm:gap-5 h-[200px] max-w-6xl cursor-pointer">
+                        <motion.a whileTap={{ scale: 0.90 }} href={`/code/${uniqueID}`} className="flex-[2] relative hover:flex-[6] transition-all duration-500 ease-out">
+                            <p className='text-white text-xl whitespace-nowrap drop-shadow-xl top-20 -left-1	z-50 absolute font-bold -rotate-90'>Code {'</>'}</p>
                             <img draggable='false' src="code.webp" className="h-full grayscale w-full opacity-20 hover:opacity-100 transition-all object-cover rounded-xl border border-neutral-50 shadow-xl" />
                         </motion.a>
-                        <motion.a whileTap={{ scale: 0.90 }} href={`/files`} className="flex-[2] hover:flex-[6] transition-all duration-500 ease-out">
+                        <motion.a whileTap={{ scale: 0.90 }} href={`/files`} className="flex-[2] hover:flex-[6] transition-all duration-500 ease-out relative">
+                            <p className='text-white text-xl whitespace-nowrap drop-shadow-xl top-20 left-5	z-50 absolute font-bold -rotate-90'>Files</p>
                             <img draggable='false' src="file.png" className="h-full grayscale w-full opacity-20 hover:opacity-100 transition-all object-cover rounded-xl border border-neutral-50 shadow-xl" />
                         </motion.a>
-                        <motion.a whileTap={{ scale: 0.90 }} href={`/notes/${uniqueID}`} className="flex-[2] hover:flex-[6] transition-all duration-500 ease-out">
+                        <motion.a whileTap={{ scale: 0.90 }} href={`/notes/${uniqueID}`} className="flex-[2] hover:flex-[6] transition-all relative duration-500 ease-out">
+                            <p className='text-white text-xl whitespace-nowrap drop-shadow-xl top-20 left-3	z-50 absolute font-bold -rotate-90'>Notes</p>
                             <img draggable='false' src="notes.jpg" className="h-full grayscale w-full opacity-20 hover:opacity-100 transition-all object-cover rounded-xl border border-neutral-50 shadow-xl" />
                         </motion.a>
                     </ul>
