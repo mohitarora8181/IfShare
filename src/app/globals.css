@@ -348,6 +348,7 @@ canvas {
   .ag-courses_item {
     -ms-flex-preferred-size: 100%;
     flex-basis: 100%;
+    margin:0
   }
 
   .ag-courses-item_title {

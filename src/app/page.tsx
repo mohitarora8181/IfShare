@@ -89,16 +89,16 @@ const page = () => {
     }, [])
 
     return (
-        <div className='w-full h-full'>
+        <div className='w-full h-full overflow-y-auto scrollbar-thin'>
             <svg className='absolute h-full w-full top-0 left-0' ref={svgRef}></svg>
             <div className='grid w-full h-full absolute' />
-            <div className='w-full h-full flex gap-5'>
-                <div className='w-1/2 p-10 py-40'>
-                    <h1 className='text-8xl relative top-0 w-fit h-auto py-4 justify-center flex bg-gradient-to-r items-center from-blue-500 via-teal-500 to-pink-500 bg-clip-text font-extrabold text-transparent text-center select-none'>IfShare</h1>
-                    <h2 className='animate-typing overflow-hidden whitespace-nowrap border-r-4 border-r-white pr-5 text-4xl text-white font-bold'>Upload and share your stuff seamlessly!</h2>
+            <div className='w-full h-full max-sm:h-fit flex gap-5 max-sm:gap-2 max-sm:flex-col'>
+                <div className='w-1/2 max-sm:w-full flex flex-wrap flex-col p-10 max-sm:p-5 py-40'>
+                    <h1 className='text-8xl w-full max-sm:text-5xl relative top-0 h-auto py-4 flex bg-gradient-to-r items-center from-blue-500 via-teal-500 to-pink-500 bg-clip-text font-extrabold text-transparent text-left select-none max-sm:justify-center'>IfShare</h1>
+                    <h2 className='animate-typing max-sm:animate-pulse overflow-hidden whitespace-nowrap border-r-4 max-sm:whitespace-normal border-r-white pr-5 text-4xl max-sm:text-xl text-white font-bold max-sm:text-center'>Upload and share your stuff seamlessly!</h2>
                 </div>
-                <div className='w-1/2'>
-                    <div className="ag-courses_box flex-1">
+                <div className='w-1/2 max-sm:w-full'>
+                    <div className="ag-courses_box max-sm:p-5 flex-1 max-sm:running max-sm:flex-col">
                         <FeatureCard
                             name='Code Share'
                             link={`/code/${uniqueID}`}
@@ -134,7 +134,7 @@ const page = () => {
                     </div>
                 </div>
             </div>
-            <footer className='w-full ocean absolute -bottom-10 left-0'>
+            <footer className='w-full ocean absolute -bottom-10 left-0 max-sm:hidden'>
                 <div className="wave"></div>
                 <div className="wave"></div>
             </footer>
@@ -149,7 +149,7 @@ const FeatureCard = ({ name, color, link, icon }: { name: string, color: string,
         whileInView={{
             opacity: 1
         }}
-        className="ag-courses_item w-1/2 border border-black scale-75 skew-x-6 skew-y-2 hover:scale-100 hover:skew-y-0 hover:skew-x-0 duration-500 transition-all">
+        className="ag-courses_item w-1/2 max-sm:w-full border border-black scale-75 max-sm:mb-5 max-sm:border-white max-sm:scale-100 skew-x-6 max-sm:skew-x-0 skew-y-2 max-sm:skew-y-0 hover:scale-100 hover:skew-y-0 hover:skew-x-0 duration-500 transition-all">
         <a href={link} className="ag-courses-item_link">
             <div className={`ag-courses-item_bg ${color}`}></div>
             <div className="ag-courses-item_title">
