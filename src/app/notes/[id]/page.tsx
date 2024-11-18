@@ -68,16 +68,15 @@ const page = () => {
 
     const boxVariants = {
         initial: {
-            scale: 1,          // Default size
-            opacity: 0.8,      // Slight transparency
-            rotate: 0,         // No rotation by default
+            scale: 1,          
+            opacity: 0.925,      
+            rotate: 0,         
             transition: { duration: 0.3 }
         },
         hover: {
-            scale: 1.03,        // Scale up when hovered
-            opacity: 1,        // Make it fully opaque when hovered
-            // rotate: 15,        // Rotate the box slightly
-            transition: { duration: 0.3 } // Smooth transition
+            scale: 1.03,        
+            opacity: 1,        
+            transition: { duration: 0.3 }
         }
     };
     useEffect(() => {
@@ -177,8 +176,8 @@ const page = () => {
 
                     )}
                 </AnimatePresence>
-                <motion.div variants={boxVariants}   // Add this
-                    initial="initial"        // Ensure initial state is set
+                <motion.div variants={boxVariants}   
+                    initial="initial"        
                     whileHover="hover" className='w-full h-[100vh] flex flex-col justify-start pt-2 max-sm:pt-1'>
                     <Toolbar editor={editor} />
                     <EditorContent editor={editor} />
