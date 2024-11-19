@@ -10,7 +10,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import QRCode from 'qrcode';
 
 const page = () => {
-  const [selectedLanguage, setLanguage] = useState('javascript');
+  const [selectedLanguage, setLanguage] = useState('');
   const [selectedTheme, setTheme] = useState('vs-dark');
   const [searchLanguage, setSearchedLanguage] = useState("");
   const [editorText, setEditorText] = useState("");
