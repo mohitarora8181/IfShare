@@ -14,6 +14,7 @@ const page = () => {
   const [selectedTheme, setTheme] = useState('vs-dark');
   const [searchLanguage, setSearchedLanguage] = useState("");
   const [editorText, setEditorText] = useState("");
+  const [readOnly, setReadonly] = useState(false);
 
   const [isSaved, setSaved] = useState(false);
 
@@ -85,6 +86,10 @@ const page = () => {
           } else {
             defineTheme(data.theme).then(_ => setTheme(data.theme))
           }
+
+          if(data?.lock == 'true'){
+            setReadonly(true);
+          }
           setSaved(true);
         }
       });
@@ -152,6 +157,7 @@ const page = () => {
           language={selectedLanguage}
           onChange={(value: any, e) => setEditorText(value)}
           value={editorText}
+          options={{ readOnly }}
         />
         <AnimatePresence>
           {modalIsOpen && qrCode && (

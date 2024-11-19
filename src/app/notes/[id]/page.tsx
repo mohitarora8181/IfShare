@@ -82,6 +82,9 @@ const page = () => {
                 if (data) {
                     setEditorValue(data.value);
                     editor?.commands.setContent(data.value);
+                    if(data?.lock == 'true'){
+                        editor?.setEditable(false)
+                    }
                     setSaved(true);
                 }
             })
