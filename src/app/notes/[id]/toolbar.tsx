@@ -2,7 +2,7 @@
 
 import React, { ReactElement } from "react";
 import { type Editor } from "@tiptap/react";
-import { ActivityLogIcon, ArrowLeftIcon, ArrowRightIcon, CodeIcon, FontBoldIcon, FontItalicIcon, LightningBoltIcon, ListBulletIcon, QuoteIcon, StrikethroughIcon, UnderlineIcon } from "@radix-ui/react-icons";
+import { ActivityLogIcon, ArrowLeftIcon, ArrowRightIcon, CodeIcon, FontBoldIcon, FontItalicIcon, LightningBoltIcon, Link1Icon, ListBulletIcon, QuoteIcon, StrikethroughIcon, UnderlineIcon } from "@radix-ui/react-icons";
 
 type Props = {
   editor: Editor | null;
@@ -27,6 +27,7 @@ const Toolbar = ({ editor }: Props) => {
         <IconButton runState={() => editor.chain().focus().toggleHighlight()} isActive={editor.isActive("highlight")} Icon={LightningBoltIcon} />
         <IconButton runState={() => editor.chain().focus().undo()} isActive={editor.isActive("undo")} Icon={ArrowLeftIcon} />
         <IconButton runState={() => editor.chain().focus().redo()} isActive={editor.isActive("redo")} Icon={ArrowRightIcon} />
+        <IconButton runState={() => editor.chain().focus().extendMarkRange('link').toggleLink({href:editor.state.doc.textBetween(editor.view.state.selection.from,editor.view.state.selection.to)})} isActive={editor.isActive("link")} Icon={Link1Icon} />
       </div>
     </div>
   );

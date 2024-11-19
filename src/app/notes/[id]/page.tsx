@@ -6,6 +6,7 @@ import StarterKit from "@tiptap/starter-kit"
 import Toolbar from './toolbar'
 import Underline from '@tiptap/extension-underline'
 import Highlight from '@tiptap/extension-highlight'
+import Link from '@tiptap/extension-link'
 import { useParams } from 'next/navigation'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Cross1Icon, UploadIcon } from '@radix-ui/react-icons'
@@ -23,7 +24,12 @@ const page = () => {
     const [modalIsOpen, setModalIsOpen] = useState(false);
 
     const editor = useEditor({
-        extensions: [StarterKit, Underline, Highlight],
+        extensions: [StarterKit, Underline, Highlight, Link.configure({
+            openOnClick: true,
+            autolink: true,
+            defaultProtocol: 'https',
+            protocols: ['http', 'https'],
+        })],
         content: editorValue,
         editorProps: {
             attributes: {
