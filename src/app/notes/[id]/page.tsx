@@ -35,7 +35,7 @@ const page = () => {
         editorProps: {
             attributes: {
                 class:
-                    `${showToolbar ? 'h-[70vh]' : 'h-[80vh]'} bg-gray-900 list-item scrollbar-thin overflow-y-auto border border-gray-400 w-full px-10 py-3 text-white text-[16px] rounded-bl-md rounded-br-md outline-none`,
+                    `${showToolbar ? 'h-[70vh] rounded-b-xl max-sm:rounded-xl border-t-0 max-sm:border-t-2' : 'h-[80vh] rounded-xl'} max-sm:h-[90vh] bg-gray-900 list-item scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-slate-300 overflow-y-auto border border-gray-600 w-full px-10 py-3 text-white text-[16px] outline-none`,
             },
         },
         onUpdate: (({ editor }) => {
@@ -109,7 +109,7 @@ const page = () => {
     }, [editor]);
 
     return (
-        <div id='notes-editor' className='bg-gray-800 w-full h-full flex-col px-20 max-sm:px-1'>
+        <div id='notes-editor' className='bg-gray-950 grid-box w-full h-full flex-col px-20 max-sm:px-1 overflow-hidden'>
             <div className='w-full pt-3'>
                 <div className='w-full h-16 bg-black flex justify-between p-3 px-5 align-middle rounded-full'>
                     <a href='/' className='overflow-hidden rounded-full h-12 w-12 self-center'>

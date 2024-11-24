@@ -104,7 +104,7 @@ const page = () => {
   }, []);
 
   return (
-    <div id='code-editor' className='px-14 max-sm:px-2 bg-gray-800 h-full w-full relative overflow-hidden'>
+    <div id='code-editor' className='px-14 grid-box max-sm:px-2 bg-gray-950 h-full w-full relative overflow-hidden'>
       <div className='w-full pt-3'>
         <div className='w-full h-16 bg-black flex justify-between p-3 px-5 align-middle rounded-full pr-10 max-sm:pr-5'>
           <a href='/' className='overflow-hidden rounded-full h-12 w-12 self-center'>
@@ -167,10 +167,10 @@ const page = () => {
               animate={{ x: 0 }}
               exit={{ x: "100vh" }}
               transition={{ duration: 0.5 }}
-              className="flex absolute right-3 flex-col items-center justify-center gap-2 bg-gray-800 rounded-xl">
+              className="flex absolute right-5 flex-col items-center justify-center gap-2 bg-gray-800 rounded-xl">
               <div className='flex relative flex-col items-center justify-center gap-2 bg-gray-800 p-5 rounded-xl'>
                 <img className="rounded-md" src={qrCode} alt="QR Code" />
-                <p className='text-gray-300'>Scan the QR code to access this code snipped.</p>
+                <p className='text-gray-300'>Scan the QR code to access this code snippet.</p>
                 <Cross1Icon onClick={() => setModalIsOpen(false)} color='black' className='absolute top-2 right-2 h-6 w-6 p-1 rounded-full bg-neutral-200 cursor-pointer' />
               </div>
             </motion.div>

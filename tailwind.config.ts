@@ -81,6 +81,23 @@ const config = {
           '0%, 100%': { borderColor: 'transparent', borderWidth: '2px' },
           '50%': { borderColor: '#3b82f6', borderWidth: '4px' },
         },
+        typing: {
+          "0%": {
+            width: "0%",
+            visibility: "hidden"
+          },
+          "100%": {
+            width: "100%"
+          }
+        },
+        blink: {
+          "50%": {
+            borderColor: "transparent"
+          },
+          "100%": {
+            borderColor: "white"
+          }
+        }
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -88,7 +105,9 @@ const config = {
         scroll:
           "scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite",
         borderPulse: 'borderPulse 2s ease-in-out infinite',
+        typing: "typing 3s steps(20) , blink .7s infinite"
       },
+
     },
     fontFamily: {
       anton: ["Anton SC", "sans-serif"],
@@ -110,4 +129,3 @@ function addVariablesForColors({ addBase, theme }: any) {
 }
 
 export default config
-
