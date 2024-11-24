@@ -14,8 +14,8 @@ const Toolbar = ({ editor }: Props) => {
   }
   return (
     <div
-      className="px-4 py-3 rounded-tl-md rounded-tr-md flex justify-center items-center
-    gap-5 w-full h-[10vh] max-sm:h-[20vh] border">
+      className="px-4 py-3 bg-black rounded-tl-md rounded-tr-md flex justify-center items-center
+    gap-5 w-full h-[10vh] max-sm:h-[20vh] border border-gray-400 bottom-b-0">
       <div className="flex justify-start items-center gap-5 max-sm:flex-wrap">
         <IconButton runState={() => editor.chain().focus().toggleBold()} isActive={editor.isActive("bold")} Icon={FontBoldIcon} />
         <IconButton runState={() => editor.chain().focus().toggleItalic()} isActive={editor.isActive("italic")} Icon={FontItalicIcon} />
@@ -25,9 +25,9 @@ const Toolbar = ({ editor }: Props) => {
         <IconButton runState={() => editor.chain().focus().toggleOrderedList()} isActive={editor.isActive("orderedList")} Icon={ActivityLogIcon} />
         <IconButton runState={() => editor.chain().focus().toggleCodeBlock()} isActive={editor.isActive("codeBlock")} Icon={CodeIcon} />
         <IconButton runState={() => editor.chain().focus().toggleHighlight()} isActive={editor.isActive("highlight")} Icon={LightningBoltIcon} />
+        <IconButton runState={() => editor.chain().focus().extendMarkRange('link').toggleLink({href:editor.state.doc.textBetween(editor.view.state.selection.from,editor.view.state.selection.to)})} isActive={editor.isActive("link")} Icon={Link1Icon} />
         <IconButton runState={() => editor.chain().focus().undo()} isActive={editor.isActive("undo")} Icon={ArrowLeftIcon} />
         <IconButton runState={() => editor.chain().focus().redo()} isActive={editor.isActive("redo")} Icon={ArrowRightIcon} />
-        <IconButton runState={() => editor.chain().focus().extendMarkRange('link').toggleLink({href:editor.state.doc.textBetween(editor.view.state.selection.from,editor.view.state.selection.to)})} isActive={editor.isActive("link")} Icon={Link1Icon} />
       </div>
     </div>
   );

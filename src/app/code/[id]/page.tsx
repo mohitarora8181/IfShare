@@ -104,7 +104,7 @@ const page = () => {
   }, []);
 
   return (
-    <div id='code-editor' className='bg-black h-full w-full relative overflow-hidden'>
+    <div id='code-editor' className='px-14 max-sm:px-2 bg-gray-800 h-full w-full relative overflow-hidden'>
       <div className='w-full pt-3'>
         <div className='w-full h-16 bg-black flex justify-between p-3 px-5 align-middle rounded-full pr-10 max-sm:pr-5'>
           <a href='/' className='overflow-hidden rounded-full h-12 w-12 self-center'>
@@ -150,14 +150,15 @@ const page = () => {
           </div>
         </div>
       </div>
-      <div className='flex justify-between w-full h-full pt-3'>
+      <div className='flex justify-between w-full h-full gap-3 pt-3'>
         <Editor
-          height="100vh"
+          height="85vh"
           theme={selectedTheme}
           language={selectedLanguage}
           onChange={(value: any, e) => setEditorText(value)}
           value={editorText}
           options={{ readOnly }}
+          className='rounded-xl overflow-hidden'
         />
         <AnimatePresence>
           {modalIsOpen && qrCode && (
@@ -169,15 +170,15 @@ const page = () => {
               className="flex absolute right-3 flex-col items-center justify-center gap-2 bg-gray-800 rounded-xl">
               <div className='flex relative flex-col items-center justify-center gap-2 bg-gray-800 p-5 rounded-xl'>
                 <img className="rounded-md" src={qrCode} alt="QR Code" />
-                <p className='text-gray-300'>Scan the QR code to access all files.</p>
+                <p className='text-gray-300'>Scan the QR code to access this code snipped.</p>
                 <Cross1Icon onClick={() => setModalIsOpen(false)} color='black' className='absolute top-2 right-2 h-6 w-6 p-1 rounded-full bg-neutral-200 cursor-pointer' />
               </div>
             </motion.div>
 
           )}
         </AnimatePresence>
-        <div className='bg-black text-white w-1/4 h-full bottom-0 right-0 max-sm:hidden'>
-          <div className='w-full h-1/2 p-5'>
+        <div className='bg-black rounded-xl text-white w-1/4 h-[85vh] bottom-5 right-0 max-sm:hidden'>
+          <div className='w-full max-h-1/2 p-5'>
             <div className='w-full flex gap-2 justify-around align-middle'>
               <p className='w-full text-[#67e8f9] pb-2 self-center'>Languages</p>
               <input
@@ -189,7 +190,7 @@ const page = () => {
                 style={{ marginBottom: "10px", padding: "5px", paddingLeft: "15px" }}
               />
             </div>
-            <ul ref={ulRef} className='w-full h-60 p-5 overflow-y-scroll scrollbar-thin scrollbar-track-gray-800 scrollbar-thumb-stone-500 scrollbar-corner-neutral-500'>
+            <ul ref={ulRef} className='w-full h-60 p-5 list-none overflow-y-scroll scrollbar-thin scrollbar-track-gray-800 scrollbar-thumb-stone-500 scrollbar-corner-neutral-500'>
               {supportedLanguages.map((ele) => {
                 return <li id={ele.name + "-language"} key={ele.name + "-language"} className={`${selectedLanguage == ele.name ? "bg-gray-700" : ""} w-full p-2 text-white border-b border-gray-600 cursor-pointer hover:bg-gray-900`}
                   onClick={() => setLanguage(ele.name)}>
@@ -198,9 +199,9 @@ const page = () => {
               })}
             </ul>
           </div>
-          <div className='w-full h-1/2 p-5'>
+          <div className='w-full max-h-1/2 p-5'>
             <p className='w-full text-[#67e8f9] pb-2'>Themes</p>
-            <ul className='w-full h-60 p-5 overflow-y-scroll scrollbar-thin scrollbar-track-gray-800 scrollbar-thumb-stone-500 scrollbar-corner-neutral-500'>
+            <ul className='w-full h-60 p-5 overflow-y-scroll list-none  scrollbar-thin scrollbar-track-gray-800 scrollbar-thumb-stone-500 scrollbar-corner-neutral-500'>
               {supportedThemes.map((ele, index) => {
                 return <li key={ele.id + "-theme"} className={`${selectedTheme == ele.id || selectedTheme == ele.name ? "bg-gray-700" : ""} w-full p-2 text-white border-b border-gray-600 cursor-pointer hover:bg-gray-900`}
                   onClick={() => {

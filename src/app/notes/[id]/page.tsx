@@ -16,6 +16,7 @@ const page = () => {
 
     const [editorValue, setEditorValue] = useState("");
     const [isSaved, setSaved] = useState(false);
+    const [showToolbar, setShowToolbar] = useState(true);
 
     const params = useParams();
 
@@ -34,7 +35,7 @@ const page = () => {
         editorProps: {
             attributes: {
                 class:
-                    "h-[70vh] bg-gray-100 list-item scrollbar-thin overflow-y-auto border w-full px-10 py-3 text-black text-[16px] rounded-bl-md rounded-br-md outline-none",
+                    `${showToolbar ? 'h-[70vh]' : 'h-[80vh]'} bg-gray-900 list-item scrollbar-thin overflow-y-auto border border-gray-400 w-full px-10 py-3 text-white text-[16px] rounded-bl-md rounded-br-md outline-none`,
             },
         },
         onUpdate: (({ editor }) => {
@@ -57,6 +58,8 @@ const page = () => {
                         value: editorValue,
                     })
                 });
+            } else if ((event.ctrlKey || event.metaKey) && event.key === 'a') {
+                editor?.commands.selectAll();
             }
         };
         const notesEditorDiv = document.getElementById('notes-editor');
@@ -82,8 +85,12 @@ const page = () => {
                 if (data) {
                     setEditorValue(data.value);
                     editor?.commands.setContent(data.value);
-                    if(data?.lock == 'true'){
-                        editor?.setEditable(false)
+                    if (data?.lock == 'true') {
+                        editor?.setEditable(false);
+                        setShowToolbar(false);
+                    } else {
+                        editor?.setEditable(true);
+                        setShowToolbar(true);
                     }
                     setSaved(true);
                 }
@@ -156,15 +163,15 @@ const page = () => {
                         className="flex absolute right-28 top-28 z-50 max-sm:top-24 max-sm:right-1 flex-col items-center justify-center border border-gray-300 gap-2 bg-gray-800 rounded-xl">
                         <div className='flex relative flex-col items-center justify-center gap-2 bg-gray-800 p-5 rounded-xl'>
                             <img className="rounded-md" src={qrCode} alt="QR Code" />
-                            <p className='text-gray-300'>Scan the QR code to access all files.</p>
+                            <p className='text-gray-300'>Scan the QR code to access this notepad.</p>
                             <Cross1Icon onClick={() => setModalIsOpen(false)} color='black' className='absolute top-2 right-2 h-6 w-6 p-1 rounded-full bg-neutral-200 cursor-pointer' />
                         </div>
                     </motion.div>
 
                 )}
             </AnimatePresence>
-            <div className='w-full h-[100vh] flex flex-col justify-start pt-2 max-sm:pt-1'>
-                <Toolbar editor={editor} />
+            <div className='w-full h-[100vh] flex flex-col justify-start pt-5 max-sm:pt-1'>
+                {showToolbar && <Toolbar editor={editor} />}
                 <EditorContent editor={editor} />
             </div>
         </div>
