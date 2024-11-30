@@ -19,16 +19,7 @@ const Whiteboard = () => {
 
     canvasRef.current = canvas;
 
-    // Add an example object
-    const rect = new fabric.Rect({
-      left: 50,
-      top: 50,
-      fill: 'red',
-      width: 100,
-      height: 100,
-    });
-    canvas.add(rect);
-
+    canvas.renderAll();
     return () => {
       canvas.dispose();
     };
@@ -85,43 +76,26 @@ const Whiteboard = () => {
       />
       <button
         onClick={enableDrawingMode}
-        style={{
-          position: 'absolute',
-          top: '20px',
-          left: '20px',
-          padding: '10px',
-          backgroundColor: activeTool === 'draw' ? '#d4f4d4' : '#f0f0f0',
-          border: '1px solid #ccc',
-        }}
+        className={`absolute font-anton top-6 left-6 bg-gradient-to-r from-cyan-500 to-green-400 px-3 py-1 rounded-md ${activeTool === 'draw' ? 'bg-gradient-to-r from-cyan-400 to-green-400' : 'bg-gradient-to-r from-cyan-100 to-green-200'}  `}
       >
         Drawing Mode
       </button>
       <button
         onClick={enableEraserMode}
-        style={{
-          position: 'absolute',
-          top: '20px',
-          left: '180px',
-          padding: '10px',
-          backgroundColor: activeTool === 'erase' ? '#f4d4d4' : '#f0f0f0',
-          border: '1px solid #ccc',
-        }}
+        className={`absolute font-anton top-6 left-40 px-3 py-1 rounded-md ${activeTool === 'erase' ? 'bg-gradient-to-r from-red-500 to-red-700' : 'bg-gradient-to-r from-red-200 to-red-400'}`}
+
       >
         Eraser
       </button>
       <button
         onClick={disableAllModes}
-        style={{
-          position: 'absolute',
-          top: '20px',
-          left: '340px',
-          padding: '10px',
-          backgroundColor: activeTool === 'none' ? '#d4d4f4' : '#f0f0f0',
-          border: '1px solid #ccc',
-        }}
+        className={`absolute font-anton top-6 left-60 px-3 py-1 rounded-md ${activeTool === 'none' ? ' bg-gradient-to-r from-gray-500 to-gray-700' : 'bg-gradient-to-r from-gray-200 to-gray-300'}  `}
       >
         Disable All
       </button>
+      <div className='absolute top-2 translate-x-[-50%] font-bubble text-3xl translate-y-1/2 left-1/2 text-black'>
+        Whiteboard
+      </div>
     </div>
   );
 };
