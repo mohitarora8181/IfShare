@@ -76,7 +76,7 @@ const Whiteboard = () => {
       />
       <button
         onClick={enableDrawingMode}
-        className={`absolute font-anton top-6 left-6 bg-gradient-to-r from-cyan-500 to-green-400 px-3 py-1 rounded-md ${activeTool === 'draw' ? 'bg-gradient-to-r from-cyan-400 to-green-400' : 'bg-gradient-to-r from-cyan-100 to-green-200'}  `}
+        className={`absolute font-anton top-6 left-6 px-3 py-1 rounded-md ${activeTool === 'draw' ? 'bg-gradient-to-r from-cyan-400 to-green-400' : 'bg-gradient-to-r from-cyan-100 to-green-200'}  `}
       >
         Drawing Mode
       </button>
