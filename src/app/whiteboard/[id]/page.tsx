@@ -8,7 +8,6 @@ const Whiteboard = () => {
   const [isDrawingMode, setIsDrawingMode] = useState(true);
 
   useEffect(() => {
-    // Initialize the canvas
     const canvasElement = document.getElementById('whiteboard');
     if (!canvasElement) return;
 
@@ -16,12 +15,11 @@ const Whiteboard = () => {
       width: 1550,
       height: 700,
       backgroundColor: '#ffffff',
-      isDrawingMode: true, // Drawing mode enabled
+      isDrawingMode: true, 
     });
 
     canvasRef.current = canvas;
 
-    // Draw a test rectangle
     const rect = new fabric.Rect({
       left: 50,
       top: 50,
@@ -31,23 +29,20 @@ const Whiteboard = () => {
     });
 
     canvas.add(rect);
-    canvas.renderAll();  // Ensure it's rendered
+    canvas.renderAll();  
 
-    // Listen for mouse up event to see objects
     canvas.on('mouse:up', () => {
       console.log('Mouse up detected');
       console.log('Objects on canvas:', canvas.getObjects());  // Log objects
-      canvas.renderAll();  // Re-render after mouse up
+      canvas.renderAll(); 
     });
 
-    // Clean up on component unmount
     return () => {
       canvas.dispose();
     };
   }, []);
 
   useEffect(() => {
-    // Update drawing mode when toggled
     if (canvasRef.current) {
       const canvas = canvasRef.current;
       canvas.isDrawingMode = isDrawingMode;
