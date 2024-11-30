@@ -1,4 +1,4 @@
-'use client';
+'use client'
 
 import React, { useEffect, useRef, useState } from 'react';
 import * as fabric from 'fabric';
@@ -8,53 +8,46 @@ const Whiteboard = () => {
   const [isDrawingMode, setIsDrawingMode] = useState(true);
 
   useEffect(() => {
-    // Ensure the DOM element exists
-    const canvasElement = document.getElementById('whiteboard');
-    if (!canvasElement) {
-      console.error('Canvas element not found');
-      return;
-    }
-
     // Initialize the canvas
+    const canvasElement = document.getElementById('whiteboard');
+    if (!canvasElement) return;
+
     const canvas = new fabric.Canvas('whiteboard', {
       width: 1550,
       height: 700,
-      backgroundColor: '#ffffff', // Set the background color to white
-      isDrawingMode: true, // Automatically enable drawing mode
+      backgroundColor: '#ffffff',
+      isDrawingMode: true, // Drawing mode enabled
     });
 
     canvasRef.current = canvas;
 
-    // Initialize the freeDrawingBrush
-    if (!canvas.freeDrawingBrush) {
-      canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
-    }
-
-    const brush = canvas.freeDrawingBrush;
-    if (brush) {
-      brush.color = 'black';
-      brush.width = 5;
-    } else {
-      console.error('Failed to initialize freeDrawingBrush');
-    }
-
-    // Persist drawings on mouse events
-    canvas.on('mouse:down', () => console.log('Mouse down detected'));
-    canvas.on('mouse:move', () => console.log('Mouse move detected'));
-    canvas.on('mouse:up', () => {
-      console.log('Mouse up detected');
-      canvas.renderAll();
-      console.log("Rendered All");
-       // Ensure the canvas re-renders and keeps the drawing
+    // Draw a test rectangle
+    const rect = new fabric.Rect({
+      left: 50,
+      top: 50,
+      fill: 'red',
+      width: 100,
+      height: 100,
     });
 
-    // Cleanup on component unmount
+    canvas.add(rect);
+    canvas.renderAll();  // Ensure it's rendered
+
+    // Listen for mouse up event to see objects
+    canvas.on('mouse:up', () => {
+      console.log('Mouse up detected');
+      console.log('Objects on canvas:', canvas.getObjects());  // Log objects
+      canvas.renderAll();  // Re-render after mouse up
+    });
+
+    // Clean up on component unmount
     return () => {
       canvas.dispose();
     };
   }, []);
 
   useEffect(() => {
+    // Update drawing mode when toggled
     if (canvasRef.current) {
       const canvas = canvasRef.current;
       canvas.isDrawingMode = isDrawingMode;
@@ -84,7 +77,6 @@ const Whiteboard = () => {
         height="700"
         style={{
           border: '1px solid black',
-          backgroundColor: '#ffffff',
         }}
       />
       <button
