@@ -7,6 +7,28 @@ const connectDB = async () => {
     })
 };
 
+const userSchema = new mongoose.Schema({
+    name: String,
+    image: String,
+    userId: { type: String, unique: true, required: true },
+    files: [{
+        name: String,
+        id: String,
+        lock: { type: Boolean, default: false }
+    }],
+    codes: [{
+        name: String,
+        id: String,
+        lock: { type: Boolean, default: false }
+    }],
+    notes: [{
+        name: String,
+        id: String,
+        lock: { type: Boolean, default: false }
+    }]
+});
+userSchema.set('timestamps', true);
+
 export async function POST(req: NextRequest) {
     await connectDB();
 
@@ -43,7 +65,7 @@ export async function POST(req: NextRequest) {
 
 export async function GET(req: NextRequest) {
     await connectDB();
-    const UserModel = mongoose.models.User;
+    const UserModel = mongoose.models.User || mongoose.model('User', userSchema);
 
     const searchParams = req.nextUrl.searchParams;
     const userId = searchParams.get('userId');
