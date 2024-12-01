@@ -140,7 +140,7 @@ const HomePage = () => {
         </motion.div>
 
         {/* </AuroraBackground> */}
-        <div className="w-full flex flex-col sm:flex  absolute top-[15.5rem] sm:bottom-10 items-center">
+        <div className="w-full flex flex-col sm:flex  absolute top-[15.5rem] sm:-bottom-[1.75rem] items-center">
           <motion.div drag dragControls={controls} className="flex absolute bottom-10 z-30">
             <AnimatedTooltip items={people} />
           </motion.div>
