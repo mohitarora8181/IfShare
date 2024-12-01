@@ -9,6 +9,7 @@ import QRCode from 'qrcode'
 import { toast, Flip } from 'react-toastify'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import supabase from '@/@/lib/client'
 
 
 
@@ -80,6 +81,16 @@ const page = () => {
   }
 
   const handleLock = async (id: string, status: boolean) => {
+    if (selectedTab == 'f') {
+      const { error: dbError } = await supabase
+        .from('uploads')
+        .update({ lock: status })
+        .eq('id', id);
+
+      if (dbError) {
+        console.error('Error storing file metadata:', dbError.message);
+      }
+    }
     const userId = session?.user?.email?.split('@')[0].replace('.', '_').replace('/', '_');
     await fetch(`/api/store/user/lock`, {
       method: "POST",

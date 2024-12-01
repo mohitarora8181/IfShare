@@ -34,6 +34,9 @@ const page = () => {
                 .select('*')
                 .eq('id', params?.id)
                 .single().then(({ data }) => {
+                    if(data.lock){
+                        window.location.href = '/'
+                    }
                     setFile(data);
                 });
         } catch (e) {

@@ -144,6 +144,7 @@ export const FileUpload = ({ showReveal }: { showReveal: Function }) => {
                 file_type: validFiles.length > 1 ? 'application/zip' : validFiles[0].type,
                 file_path: `/storage/v1/object/public/uploads/${uniqueFileName}`,
                 created_at: new Date().toISOString(),
+                lock: false
             }]);
 
         if (dbError) {
