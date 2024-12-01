@@ -10,9 +10,10 @@ const connectDB = async () => {
 const codeSchema = new mongoose.Schema({
     id: { type: String, unique: true, required: true },
     value: { type: String, required: true },
+    lock: { type: Boolean, default: false }
 });
 codeSchema.set('timestamps', true);
-const NotesModel = mongoose.models.Notes || mongoose.model('Notes', codeSchema);
+export const NotesModel = mongoose.models.Notes || mongoose.model('Notes', codeSchema);
 
 export async function POST(req: NextRequest) {
     await connectDB();

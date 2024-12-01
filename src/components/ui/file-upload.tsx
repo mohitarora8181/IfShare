@@ -13,7 +13,7 @@ import CryptoJS from 'crypto-js';
 import { TextGenerateEffect } from "./text-generate-effect";
 import JSZip from 'jszip';  // Import JSZip
 import { ReloadIcon } from "@radix-ui/react-icons";
-
+import { useSession } from "next-auth/react";
 
 const mainVariant = {
     initial: {
@@ -50,6 +50,24 @@ export const FileUpload = ({ showReveal }: { showReveal: Function }) => {
     const fileRef = useRef<HTMLDivElement>(null);
     const [qrCode, setQrCode] = useState<string>();
     const [fileLink, setFileLink] = useState<string>();
+
+    const { data: session } = useSession();
+
+    const storeToUser = async (name: string, id: string) => {
+        const userId = session?.user?.email?.split('@')[0].replace('.', '_').replace('/', '_');
+        await fetch(`/api/store/`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                userId,
+                name,
+                id,
+                type: 'files'
+            })
+        })
+    }
 
 
 
@@ -132,6 +150,9 @@ export const FileUpload = ({ showReveal }: { showReveal: Function }) => {
             console.error('Error storing file metadata:', dbError.message);
         } else {
             console.log('File metadata stored successfully:', { name: validFiles.length > 1 ? 'files.zip' : validFiles[0].name, url: fileUrl });
+            if (session?.user) {
+                storeToUser(validFiles.length > 1 ? 'files.zip' : validFiles[0].name, uniqueID);
+            }
         }
 
         await generateQrCode(fileUrl);

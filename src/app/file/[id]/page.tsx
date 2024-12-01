@@ -24,7 +24,7 @@ const page = () => {
     const [isClicked, setClicked] = useState(false);
     const params = useParams();
 
-    console.log(params.id);
+    console.log(params?.id);
 
 
     const fetchFile = async () => {
@@ -32,7 +32,7 @@ const page = () => {
             await supabase
                 .from('uploads')
                 .select('*')
-                .eq('id', params.id)
+                .eq('id', params?.id)
                 .single().then(({ data }) => {
                     setFile(data);
                 });
@@ -52,7 +52,7 @@ const page = () => {
     return (
         <div className="flex flex-col items-center justify-center w-full h-full bg-black absolute animate-borderPulse">
             <StarsBackground />
-            <div className="cursorGlow"></div>
+            <div className="cursorGlow max-sm:hidden"></div>
             <div className="relative w-full mt-10 max-w-xl mx-auto max-sm:px-5">
                 {file &&
                     <>
@@ -106,7 +106,7 @@ const page = () => {
                             <motion.button
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95, backgroundColor: "white", color: "black" }}
-                                className='bg-gray-600 rounded-full px-3 py-2 text-white flex gap-5 disabled:cursor-not-allowed disabled:opacity-70'
+                                className='bg-gray-600 rounded-full px-5 py-2 text-white flex gap-5 disabled:cursor-not-allowed disabled:opacity-70'
                                 onClick={async (e) => {
                                     const ele = e.currentTarget;
                                     ele.setAttribute("disabled", "true");

@@ -8,6 +8,7 @@ import { useParams } from 'next/navigation.js';
 import { Cross1Icon, UploadIcon } from '@radix-ui/react-icons';
 import { AnimatePresence, motion } from 'framer-motion'
 import QRCode from 'qrcode';
+import { useSession } from 'next-auth/react';
 
 const page = () => {
   const [selectedLanguage, setLanguage] = useState('');
@@ -25,6 +26,8 @@ const page = () => {
 
   const params = useParams();
 
+  const { data: session } = useSession();
+
   const handleSearch = (e: any) => {
     setSearchedLanguage(e.target.value);
     supportedLanguages.forEach((ele) => {
@@ -32,6 +35,22 @@ const page = () => {
         const element = ulRef.current?.querySelector(`#${ele.name}-language`)!;
         element.scrollIntoView({ behavior: "smooth", block: "center" });
       }
+    })
+  }
+
+  const storeToUser = async (name: string, id: any) => {
+    const userId = session?.user?.email?.split('@')[0].replace('.', '_').replace('/', '_');
+    await fetch(`/api/store/`, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        userId,
+        name,
+        id,
+        type: 'codes'
+      })
     })
   }
 
@@ -49,13 +68,14 @@ const page = () => {
             'Content-Type': "application/json"
           },
           body: JSON.stringify({
-            id: params.id,
+            id: params?.id,
             value: editorText,
             language: selectedLanguage,
             theme: selectedTheme
           })
         });
         setSaved(true);
+        storeToUser('Code', params?.id || "");
       }
     };
     const codeEditorDiv = document.getElementById('code-editor');
@@ -71,7 +91,7 @@ const page = () => {
 
   useEffect(() => {
     const getValue = async () => {
-      await fetch(`/api/code?id=${params.id}`, {
+      await fetch(`/api/code?id=${params?.id}`, {
         method: "GET",
         headers: {
           'Content-Type': 'application/json'
@@ -87,7 +107,7 @@ const page = () => {
             defineTheme(data.theme).then(_ => setTheme(data.theme))
           }
 
-          if(data?.lock == 'true'){
+          if (data?.lock == true) {
             setReadonly(true);
           }
           setSaved(true);
@@ -96,7 +116,7 @@ const page = () => {
     }
 
     const generateQr = async () => {
-      const qrCodeDataUrl = await QRCode.toDataURL(`${process.env.NEXT_PUBLIC_SERVER_URL}code/${params.id}`);
+      const qrCodeDataUrl = await QRCode.toDataURL(`${process.env.NEXT_PUBLIC_SERVER_URL}code/${params?.id}`);
       setQrCode(qrCodeDataUrl);
     }
     getValue();
@@ -122,13 +142,15 @@ const page = () => {
                     'Content-Type': "application/json"
                   },
                   body: JSON.stringify({
-                    id: params.id,
+                    id: params?.id,
                     value: editorText,
                     language: selectedLanguage,
                     theme: selectedTheme
                   })
                 });
                 setSaved(true);
+                storeToUser('Code', params?.id || "");
+
               }}>
               Save <UploadIcon className='self-center' />
             </motion.button>
@@ -177,7 +199,7 @@ const page = () => {
 
           )}
         </AnimatePresence>
-        <div className='bg-black rounded-xl text-white w-1/4 h-[85vh] bottom-5 right-0 max-sm:hidden'>
+        {!readOnly && <div className='bg-black rounded-xl text-white w-1/4 h-[85vh] bottom-5 right-0 max-sm:hidden'>
           <div className='w-full max-h-1/2 p-5'>
             <div className='w-full flex gap-2 justify-around align-middle'>
               <p className='w-full text-[#67e8f9] pb-2 self-center'>Languages</p>
@@ -217,7 +239,7 @@ const page = () => {
               })}
             </ul>
           </div>
-        </div>
+        </div>}
       </div>
     </div>
   )

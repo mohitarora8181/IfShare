@@ -11,6 +11,7 @@ import { useParams } from 'next/navigation'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Cross1Icon, UploadIcon } from '@radix-ui/react-icons'
 import QRCode from 'qrcode'
+import { useSession } from 'next-auth/react'
 
 const page = () => {
 
@@ -19,6 +20,8 @@ const page = () => {
     const [showToolbar, setShowToolbar] = useState(true);
 
     const params = useParams();
+
+    const { data: session } = useSession();
 
 
     const [qrCode, setQrCode] = useState<any>("");
@@ -43,6 +46,22 @@ const page = () => {
         })
     });
 
+    const storeToUser = async (name: string, id: any) => {
+        const userId = session?.user?.email?.split('@')[0].replace('.', '_').replace('/', '_');
+        await fetch(`/api/store/`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                userId,
+                name,
+                id,
+                type: 'notes'
+            })
+        })
+    }
+
 
     useEffect(() => {
         const handleKeyDown = async (event: any) => {
@@ -54,10 +73,12 @@ const page = () => {
                         'Content-Type': "application/json"
                     },
                     body: JSON.stringify({
-                        id: params.id,
+                        id: params?.id,
                         value: editorValue,
                     })
                 });
+                setSaved(true);
+                storeToUser('Note', params?.id || "");
             } else if ((event.ctrlKey || event.metaKey) && event.key === 'a') {
                 editor?.commands.selectAll();
             }
@@ -75,7 +96,7 @@ const page = () => {
 
     useEffect(() => {
         const getValue = async () => {
-            await fetch(`/api/notes?id=${params.id}`, {
+            await fetch(`/api/notes?id=${params?.id}`, {
                 method: "GET",
                 headers: {
                     'Content-Type': 'application/json'
@@ -85,7 +106,7 @@ const page = () => {
                 if (data) {
                     setEditorValue(data.value);
                     editor?.commands.setContent(data.value);
-                    if (data?.lock == 'true') {
+                    if (data?.lock == true) {
                         editor?.setEditable(false);
                         setShowToolbar(false);
                     } else {
@@ -98,7 +119,7 @@ const page = () => {
         }
 
         const generateQr = async () => {
-            const qrCodeDataUrl = await QRCode.toDataURL(`${process.env.NEXT_PUBLIC_SERVER_URL}notes/${params.id}`);
+            const qrCodeDataUrl = await QRCode.toDataURL(`${process.env.NEXT_PUBLIC_SERVER_URL}notes/${params?.id}`);
             setQrCode(qrCodeDataUrl);
         }
 
@@ -127,11 +148,12 @@ const page = () => {
                                         'Content-Type': "application/json"
                                     },
                                     body: JSON.stringify({
-                                        id: params.id,
+                                        id: params?.id,
                                         value: editorValue,
                                     })
                                 });
                                 setSaved(true);
+                                storeToUser('Note', params?.id || "");
                             }}>
                             Save <UploadIcon className='self-center' />
                         </motion.button>

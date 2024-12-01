@@ -4,31 +4,9 @@ import React, { useEffect, useState } from 'react';
 import { FileUpload } from '@/@/components/ui/file-upload';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { AnimatedTooltip } from '@/@/components/ui/animated-tooltip';
-import something from "@/@/assets/1730644219432_do.jpg"
-import { TextRevealCard, TextRevealCardDescription, TextRevealCardTitle } from '@/@/components/ui/text-reveal-card';
+import { TextRevealCard} from '@/@/components/ui/text-reveal-card';
 import { motion } from 'framer-motion'
-import { Button } from '@/@/components/ui/moving-border-button';
-import { CodeIcon, FileTextIcon } from '@radix-ui/react-icons';
 import { generateUniqueId } from '@/@/lib/utils';
-
-
-
-const people = [
-    {
-        id: 1,
-        name: "Mohit Arora",
-        designation: "Full Stack Developer",
-        image: something
-    },
-    {
-        id: 2,
-        name: "Murtaza",
-        designation: "Web Developer",
-        image: something
-    },
-];
-
 
 const HomePage = () => {
     const [isMounted, setMounted] = useState(false);

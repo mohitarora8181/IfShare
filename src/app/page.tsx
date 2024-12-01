@@ -4,9 +4,12 @@ import gsap from 'gsap';
 import React, { ReactNode, useEffect, useRef, useState } from 'react'
 import { color, motion } from 'framer-motion'
 import { generateUniqueId } from '../lib/utils';
+import { useSession, signIn } from 'next-auth/react';
 
 const page = () => {
   const [uniqueID, setUniqueId] = useState('');
+
+  const { data: session } = useSession();
 
   useEffect(() => {
     gsap.from('h1 , h2', {
@@ -86,12 +89,30 @@ const page = () => {
       //@ts-ignore
       root.innerHTML = "";
     };
-  }, [])
+  }, []);
+
+  useEffect(() => {
+
+    const createUser = async () => {
+      await fetch(`/api/store/user`, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ user: session?.user })
+      })
+    }
+
+    if (session?.user) {
+      createUser();
+    }
+  }, [session])
 
   return (
-    <div className='w-full h-full overflow-y-auto scrollbar-thin'>
+    <div className='w-full h-full overflow-y-auto scrollbar-thin select-none'>
       <svg className='absolute h-full w-full top-0 left-0' ref={svgRef}></svg>
-      <div className='grid w-full h-full absolute' />
+      <div className='grid-back w-full h-full absolute' />
+      <LoginButton session={session} />
       <div className='w-full h-full max-sm:h-fit flex gap-5 max-sm:gap-2 max-sm:flex-col'>
         <div className='w-1/2 max-sm:w-full flex flex-wrap flex-col p-10 max-sm:p-5 py-40'>
           <h1 className='text-8xl w-full max-sm:text-5xl relative top-0 h-auto py-4 flex bg-gradient-to-r items-center from-blue-500 via-teal-500 to-pink-500 bg-clip-text font-extrabold text-transparent text-left select-none max-sm:justify-center'>IfShare</h1>
@@ -99,7 +120,7 @@ const page = () => {
         </div>
         <div className='w-1/2 max-sm:w-full'>
           <div className="ag-courses_box max-sm:p-5 flex-1 max-sm:running max-sm:flex-col">
-          <FeatureCard
+            <FeatureCard
               name='Files Share'
               link='/files'
               color='bg-cyan-600'
@@ -160,6 +181,33 @@ const FeatureCard = ({ name, color, link, icon }: { name: string, color: string,
       </div>
     </a>
   </motion.div>
+}
+
+const LoginButton = ({ session }: any) => {
+  const userID = session?.user?.email.split('@')[0].replace('.', '_').replace('/', '_');
+
+  return session?.user ?
+    <motion.img
+      whileTap={{ scale: 0.90 }} whileHover={{ scale: 1.2 }}
+      className='w-12 h-12 rounded-full absolute max-sm:relative top-8 cursor-pointer left-5'
+      src={session.user.image} alt='user-image'
+      referrerPolicy='no-referrer'
+
+      onClick={() => {
+        window.location.href = `/user/${userID}`
+      }}
+    />
+    : <motion.button initial={{
+      opacity: 0
+    }} whileInView={{
+      opacity: 1
+    }} className='flex gap-2 absolute max-sm:relative align-middle cursor-pointer p-2 px-3 top-5 left-3 rounded-full bg-gray-100 border transition-all hover:border-indigo-500'
+      onClick={(e) => {
+        signIn("google");
+      }}>
+      Sign in with
+      <svg className='self-center' width="20px" height="20px" viewBox="0 0 16 16" fill="none"><path fill="#4285F4" d="M14.9 8.161c0-.476-.039-.954-.121-1.422h-6.64v2.695h3.802a3.24 3.24 0 01-1.407 2.127v1.75h2.269c1.332-1.22 2.097-3.02 2.097-5.15z" /><path fill="#34A853" d="M8.14 15c1.898 0 3.499-.62 4.665-1.69l-2.268-1.749c-.631.427-1.446.669-2.395.669-1.836 0-3.393-1.232-3.952-2.888H1.85v1.803A7.044 7.044 0 008.14 15z" /><path fill="#FBBC04" d="M4.187 9.342a4.17 4.17 0 010-2.68V4.859H1.849a6.97 6.97 0 000 6.286l2.338-1.803z" /><path fill="#EA4335" d="M8.14 3.77a3.837 3.837 0 012.7 1.05l2.01-1.999a6.786 6.786 0 00-4.71-1.82 7.042 7.042 0 00-6.29 3.858L4.186 6.66c.556-1.658 2.116-2.89 3.952-2.89z" /></svg>
+    </motion.button>
 }
 
 export default page

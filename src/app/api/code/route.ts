@@ -12,9 +12,10 @@ const codeSchema = new mongoose.Schema({
     value: { type: String, required: true },
     theme: String,
     language: String,
+    lock: { type: Boolean, default: false }
 });
 codeSchema.set('timestamps', true);
-const CodeModel = mongoose.models.Code || mongoose.model('Code', codeSchema);
+export const CodeModel = mongoose.models.Code || mongoose.model('Code', codeSchema);
 
 export async function POST(req: NextRequest) {
     await connectDB();

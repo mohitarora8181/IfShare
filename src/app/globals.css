@@ -140,7 +140,7 @@ body h1 {
 }
 
 
-.grid {
+.grid-back {
   content: '';
   position: absolute;
   height: 100%;
