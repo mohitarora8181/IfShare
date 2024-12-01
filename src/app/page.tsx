@@ -62,7 +62,7 @@ const HomePage = () => {
           </div>
 
 
-          <div className='flex z-50'>
+          <div className='flex z-50 absolute -bottom-[13rem]'>
             <motion.a
               href={`/code/${uniqueID}`}
               animate={{ y: [0, 10, 0], rotate: 10 }}  // Moves from 0 to 100 and then back to 0
@@ -98,8 +98,8 @@ const HomePage = () => {
 
           </div>
 
-          <div className='flex  text-white'>
-            <Accordion type="single" collapsible className="w-full flex font-anton mt-2 items-center gap-40 sm:flex hidden text-white">
+          <div className='flex text-white font-kanit text-xs absolute -bottom-[6rem]'>
+            <Accordion type="single" collapsible className="w-full flex items-center gap-20 text-white">
               <AccordionItem value="item-1">
                 <AccordionTrigger>Is it accessible?</AccordionTrigger>
                 <AccordionContent>
@@ -123,7 +123,7 @@ const HomePage = () => {
             </Accordion>
           </div>
 
-          <div className='flex w-[100vw] justify-between p-4 max-sm:hidden'>
+          <div className='flex w-full justify-between absolute -bottom-10 max-sm:hidden'>
 
             <TextRevealCard
               text="End To End Encryption"
