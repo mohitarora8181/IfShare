@@ -15,7 +15,7 @@ const codeSchema = new mongoose.Schema({
     lock: { type: Boolean, default: false }
 });
 codeSchema.set('timestamps', true);
-export const CodeModel = mongoose.models.Code || mongoose.model('Code', codeSchema);
+const CodeModel = mongoose.models.Code || mongoose.model('Code', codeSchema);
 
 export async function POST(req: NextRequest) {
     await connectDB();

@@ -100,11 +100,15 @@ const page = () => {
         const data = await res.json();
         if (data) {
           setEditorText(data.value);
-          setLanguage(data.language);
-          if (data.theme == 'vs-dark' || data.theme == 'light') {
-            setTheme(data.theme);
-          } else {
-            defineTheme(data.theme).then(_ => setTheme(data.theme))
+          if (data?.language) {
+            setLanguage(data.language);
+          }
+          if (data?.theme) {
+            if (data.theme == 'vs-dark' || data.theme == 'light') {
+              setTheme(data.theme);
+            } else {
+              defineTheme(data.theme).then(_ => setTheme(data.theme))
+            }
           }
 
           if (data?.lock == true) {

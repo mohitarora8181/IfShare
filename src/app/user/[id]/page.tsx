@@ -94,8 +94,8 @@ const page = () => {
       })
     }).then(async resp => {
       if (await resp.text() == 'done') {
-        toast.success('Updated');
-        setLockChanges(id);
+        toast.success(status ? 'Locked' : 'Unlocked');
+        setLockChanges(id + status);
       }
     })
   }
@@ -122,17 +122,17 @@ const page = () => {
           <div className='w-full grid grid-cols-3 gap-10 overflow-y-auto p-5 pt-10'>
             {
               selectedTab == 'f' && files.length > 0 && files.map((file) => {
-                return <Item key={file.name} item={file} currentTab={selectedTab} handleShare={handleShare} handleLock={handleLock} />
+                return <Item key={file.name + file.id} item={file} currentTab={selectedTab} handleShare={handleShare} handleLock={handleLock} />
               })
             }
             {
               selectedTab == 'c' && codes.length > 0 && codes.map((code) => {
-                return <Item key={code.name} item={code} currentTab={selectedTab} handleShare={handleShare} handleLock={handleLock} />
+                return <Item key={code.name + code.id} item={code} currentTab={selectedTab} handleShare={handleShare} handleLock={handleLock} />
               })
             }
             {
               selectedTab == 'n' && notes.length > 0 && notes.map((note) => {
-                return <Item key={note.name} item={note} currentTab={selectedTab} handleShare={handleShare} handleLock={handleLock} />
+                return <Item key={note.name + note.id} item={note} currentTab={selectedTab} handleShare={handleShare} handleLock={handleLock} />
               })
             }
           </div>

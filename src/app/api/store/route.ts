@@ -1,12 +1,13 @@
 import mongoose from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
-import { UserModel } from "./user/route";
 
 const connectDB = async () => {
     await mongoose.connect(process.env.NEXT_PUBLIC_MONGO_URI!).then(() => {
         console.log("MongoDb Database Connected");
     })
 };
+
+const UserModel = mongoose.models.User
 
 export async function POST(req: NextRequest) {
     await connectDB();

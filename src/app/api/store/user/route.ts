@@ -28,7 +28,7 @@ const userSchema = new mongoose.Schema({
     }]
 });
 userSchema.set('timestamps', true);
-export const UserModel = mongoose.models.User || mongoose.model('User', userSchema);
+const UserModel = mongoose.models.User || mongoose.model('User', userSchema);
 
 export async function POST(req: NextRequest) {
     await connectDB();

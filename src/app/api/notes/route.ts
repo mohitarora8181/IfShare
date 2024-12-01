@@ -13,7 +13,7 @@ const codeSchema = new mongoose.Schema({
     lock: { type: Boolean, default: false }
 });
 codeSchema.set('timestamps', true);
-export const NotesModel = mongoose.models.Notes || mongoose.model('Notes', codeSchema);
+const NotesModel = mongoose.models.Notes || mongoose.model('Notes', codeSchema);
 
 export async function POST(req: NextRequest) {
     await connectDB();
