@@ -122,7 +122,7 @@ const HomePage = () => {
               <p className='bg-gradient-to-r from-cdyan-500 bg-zinc-900 to-greefn-400 px-4 text-white py-2 text-sm rounded-md text-center'>Notes Share</p>
             </motion.a> */}
 
-            <FloatingDock items={links} />
+            <FloatingDock mobileClassName='absolute right-[6rem] -bottom-' items={links} />
 
 
 
