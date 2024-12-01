@@ -12,6 +12,12 @@ import { generateUniqueId } from '../lib/utils';
 import { useDragControls } from "motion/react"
 import { AuroraBackground } from '../components/ui/aurora-background';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@radix-ui/react-accordion';
+import { FloatingDock } from '../components/ui/floating-dock';
+import { IconBrandGithub, IconBrandX, IconExchange, IconHome, IconNewSection, IconTerminal2 } from '@tabler/icons-react';
+import { FaCode } from "react-icons/fa6";
+import { MdOutlineDraw } from "react-icons/md";
+import { GrNotes } from "react-icons/gr";
+
 
 
 const people = [
@@ -19,15 +25,18 @@ const people = [
     id: 1,
     name: "Mohit Arora",
     designation: "Full Stack Developer",
-    image: something
+    image: something, 
+    href: "https://github.com/MurtazaKhannn"
   },
   {
     id: 2,
     name: "Murtaza",
     designation: "Full Stack Developer",
-    image: something
+    image: something,
+    href: "https://github.com/MurtazaKhannn"
   },
 ];
+
 
 
 
@@ -41,6 +50,32 @@ const HomePage = () => {
     setMounted(true);
     setUniqueID(generateUniqueId());
   }, []);
+
+  const links = [
+
+    {
+      title: "Code Share",
+      icon: (
+        <FaCode className="h-full w-full text-white dark:text-neutral-700" />
+      ),
+      href: `/code/${uniqueID}`,
+    },
+  
+    {
+      title: "Whieboard",
+      icon: (
+        <MdOutlineDraw className="h-full w-full text-white dark:text-neutral-300" />
+      ),
+      href: `/whiteboard/${uniqueID}`,
+    },
+    {
+      title: "Notes Share",
+      icon: (
+        <GrNotes className="h-full w-full text-white dark:text-neutral-300" />
+      ),
+      href: `/notes/${uniqueID}`,
+    },
+  ];
 
 
   return (
@@ -63,16 +98,9 @@ const HomePage = () => {
 
 
           <div className='flex z-50 absolute gap-40 -bottom-[15rem]'>
-            <motion.a
+            {/* <motion.a
               href={`/code/${uniqueID}`}
-              animate={{ y: [0, 10, 0], rotate: 10 }}  // Moves from 0 to 100 and then back to 0
-              transition={{
-                repeat: Infinity,            // Repeat infinitely
-                repeatDelay: 1,              // Delay between repeats (in seconds)
-                duration: 6,                 // Duration for one full cycle (forward + reverse)
-                repeatType: "reverse",       // Reverse the animation after completing one cycle
-                ease: "easeInOut",           // Easing function for smooth animation
-              }} className="relative text-xl lg:text-[1.3vw] px-4 lg:px-[1.5vw] flex items-center font-semibold text-white bg-zinc-900 
+               className="relative text-xl lg:text-[1.3vw] flex items-center text-white  
     font-bubble  
     rounded-full 
     "
@@ -80,8 +108,8 @@ const HomePage = () => {
                 borderImage: "linear-gradient(to right, #00bcd4, #4caf50) 1", // Gradient border
               }}
             >
-              Code Share
-            </motion.a>
+              <p className='text-sm bg-zinc-900 px-4 text-white py-2 rounded-md text-center'>Code Share</p>
+              </motion.a>
 
 
 
@@ -91,30 +119,32 @@ const HomePage = () => {
               drag
               dragControls={controls}
             >
-              <p className='bg-gradient-to-r from-cdyan-500 bg-zinc-900 to-greefn-400 px-3 text-white py-1 rounded-md text-center'>Notes Share</p>
-            </motion.a>
+              <p className='bg-gradient-to-r from-cdyan-500 bg-zinc-900 to-greefn-400 px-4 text-white py-2 text-sm rounded-md text-center'>Notes Share</p>
+            </motion.a> */}
+
+            <FloatingDock items={links} />
 
 
 
           </div>
 
           <div className='flex text-white sm:hidden xl:flex  font-kanit text-xs absolute -bottom-[6rem] z-40'>
-            <Accordion type="single" collapsible className="w-full flex items-center gap-20 text-white z-40">
+            <Accordion type="single" collapsible className="w-full flex items-center gap-20  text-white z-40">
               <AccordionItem value="item-1">
-                <AccordionTrigger>Is it accessible?</AccordionTrigger>
+                <AccordionTrigger className='bg-zinc-900 px-3 rounded-md py-1'>Is it accessible?</AccordionTrigger>
                 <AccordionContent>
                   Yes. It adheres to the WAI-ARIA design pattern.
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="item-2">
-                <AccordionTrigger>Is it styled?</AccordionTrigger>
+                <AccordionTrigger className='bg-zinc-900 px-3 rounded-md py-1'>Is it styled?</AccordionTrigger>
                 <AccordionContent>
                   Yes. It comes with default styles that matches the other
                   components&apos; aesthetic.
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="item-3">
-                <AccordionTrigger>Is it animated?</AccordionTrigger>
+                <AccordionTrigger className='bg-zinc-900 px-3 rounded-md py-1'>Is it animated?</AccordionTrigger>
                 <AccordionContent>
                   Yes. It&apos;s animated by default, but you can disable it if you
                   prefer.
