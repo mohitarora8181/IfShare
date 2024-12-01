@@ -28,10 +28,12 @@ const userSchema = new mongoose.Schema({
     }]
 });
 userSchema.set('timestamps', true);
-const UserModel = mongoose.models.User || mongoose.model('User', userSchema);
 
 export async function POST(req: NextRequest) {
     await connectDB();
+
+    const UserModel = mongoose.models.User || mongoose.model('User', userSchema);
+
 
     const { user } = await req.json();
     const userId = user.email.split('@')[0].replace('.', '_').replace('/', '_');
