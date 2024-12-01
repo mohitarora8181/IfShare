@@ -7,10 +7,10 @@ const connectDB = async () => {
     })
 };
 
-const UserModel = mongoose.models.User
-
 export async function POST(req: NextRequest) {
     await connectDB();
+
+    const UserModel = mongoose.models.User;
 
     const { userId, name, id, type } = await req.json();
     try {
@@ -43,6 +43,8 @@ export async function POST(req: NextRequest) {
 
 export async function GET(req: NextRequest) {
     await connectDB();
+    const UserModel = mongoose.models.User;
+
     const searchParams = req.nextUrl.searchParams;
     const userId = searchParams.get('userId');
     try {
