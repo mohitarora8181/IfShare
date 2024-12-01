@@ -62,7 +62,7 @@ const HomePage = () => {
           </div>
 
 
-          <div className='flex z-50 absolute -bottom-[13rem]'>
+          <div className='flex z-50 absolute gap-40 -bottom-[15rem]'>
             <motion.a
               href={`/code/${uniqueID}`}
               animate={{ y: [0, 10, 0], rotate: 10 }}  // Moves from 0 to 100 and then back to 0
@@ -72,10 +72,10 @@ const HomePage = () => {
                 duration: 6,                 // Duration for one full cycle (forward + reverse)
                 repeatType: "reverse",       // Reverse the animation after completing one cycle
                 ease: "easeInOut",           // Easing function for smooth animation
-              }} className="relative text-xl lg:text-[1.3vw] px-4 lg:px-[1.5vw] py-3 font-semibold bg-transparent text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-green-400 
-    border- font-bubble border-transparent 
+              }} className="relative text-xl lg:text-[1.3vw] px-4 lg:px-[1.5vw] flex items-center font-semibold text-white bg-zinc-900 
+    font-bubble  
     rounded-full 
-    group"
+    "
               style={{
                 borderImage: "linear-gradient(to right, #00bcd4, #4caf50) 1", // Gradient border
               }}
@@ -91,15 +91,15 @@ const HomePage = () => {
               drag
               dragControls={controls}
             >
-              <p className='bg-gradient-to-r from-cyan-500 to-green-400 px-3 py-1 rounded-md text-center'>Notes Share</p>
+              <p className='bg-gradient-to-r from-cdyan-500 bg-zinc-900 to-greefn-400 px-3 text-white py-1 rounded-md text-center'>Notes Share</p>
             </motion.a>
 
 
 
           </div>
 
-          <div className='flex text-white font-kanit text-xs absolute -bottom-[6rem]'>
-            <Accordion type="single" collapsible className="w-full flex items-center gap-20 text-white">
+          <div className='flex text-white sm:hidden xl:flex  font-kanit text-xs absolute -bottom-[6rem] z-40'>
+            <Accordion type="single" collapsible className="w-full flex items-center gap-20 text-white z-40">
               <AccordionItem value="item-1">
                 <AccordionTrigger>Is it accessible?</AccordionTrigger>
                 <AccordionContent>
@@ -123,7 +123,7 @@ const HomePage = () => {
             </Accordion>
           </div>
 
-          <div className='flex w-full justify-between absolute -bottom-10 max-sm:hidden'>
+          <div className='flex w-full justify-between absolute -bottom-[10rem] max-sm:hidden z-20'>
 
             <TextRevealCard
               text="End To End Encryption"
@@ -140,7 +140,7 @@ const HomePage = () => {
         </motion.div>
 
         {/* </AuroraBackground> */}
-        <div className="w-full flex flex-col items-center">
+        <div className="w-full flex flex-col sm:flex  absolute top-[15.5rem] sm:bottom-10 items-center">
           <motion.div drag dragControls={controls} className="flex absolute bottom-10 z-30">
             <AnimatedTooltip items={people} />
           </motion.div>
