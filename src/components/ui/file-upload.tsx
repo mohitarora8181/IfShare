@@ -207,9 +207,7 @@ export const FileUpload = ({ showReveal }: { showReveal: Function }) => {
                             </span>
                         </div>
                         <motion.div className="relative w-full content-center max-w-xl mx-auto cursor-pointer scrollbar-thin px-5 max-sm:px-1 overflow-x-hidden h-[30vh] max-sm:h-[50vh] overflow-y-auto"
-                            whileHover="animate"
 
-                            onClick={handleClick}
                         >
 
                             {files.length > 0 &&
@@ -218,7 +216,7 @@ export const FileUpload = ({ showReveal }: { showReveal: Function }) => {
                                         key={"file" + idx}
                                         layoutId={idx === 0 ? "file-upload" : "file-upload-" + idx}
                                         className={cn(
-                                            "relative select-none overflow-hidden z-40 bg-white dark:bg-neutral-900 flex flex-col items-start justify-start md:h-24 p-4 mt-4 w-[20rem] mx-auto rounded-md",
+                                            "relative select-none overflow-hidden z-40 text-white dark:bg-neutral-900 flex flex-col items-start justify-start md:h-24 p-4 mt-4 w-[20rem] mx-auto rounded-md",
                                             "shadow-sm",
                                             `${!qrCode && "animate-pulse"}`
                                         )}
@@ -269,10 +267,13 @@ export const FileUpload = ({ showReveal }: { showReveal: Function }) => {
                                     variants={mainVariant}
                                     transition={{
                                         type: "spring",
-                                        stiffness: 300,
+                                        stiffness: 800,
                                         damping: 20,
                                     }}
+                                    onClick={handleClick}
                                     ref={fileRef}
+                                    whileHover="animate"
+
                                     className={cn(
                                         "relative group-hover/file:shadow-2xl z-40 bg-white dark:bg-neutral-900 flex items-center justify-center h-32 mt-4 w-full max-w-[8rem] mx-auto rounded-md",
                                         "shadow-[0px_10px_50px_rgba(0,0,0,0.1)]"
@@ -303,7 +304,7 @@ export const FileUpload = ({ showReveal }: { showReveal: Function }) => {
 
 
                     </div>
-                    <div className="flex flex-col gap-2 items-center content-center justify-center">
+                    <div className="flex flex-col items-center">
                         {qrCode && (
                             <motion.div className="flex flex-col items-center justify-center gap-2">
                                 <img className="rounded-md" src={qrCode} alt="QR Code" />
@@ -313,7 +314,7 @@ export const FileUpload = ({ showReveal }: { showReveal: Function }) => {
                         )}
 
                         {fileLink && (
-                            <div className="download-link flex gap-2 overflow-hidden">
+                            <div className="download-link flex gap-2 overflow-hidden ">
                                 <span className="cursor-pointer text-xs flex justify-center items-center bg-white px-3 py-1 text-black rounded-md font-bold" onClick={() => {
                                     navigator.clipboard.writeText(fileLink);
                                     toast.success('Copied ✔', {
