@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react'
 import { signOut, useSession } from 'next-auth/react'
 import { motion } from 'framer-motion'
-import { IconDownload, IconEdit, IconLock, IconLockOpen2, IconShare, IconShare2 } from '@tabler/icons-react'
+import { IconDownload, IconEdit, IconLock, IconLockOpen2, IconShare, IconShare2, IconTrash } from '@tabler/icons-react'
 import { Cross1Icon } from '@radix-ui/react-icons'
 import QRCode from 'qrcode'
 import { toast, Flip } from 'react-toastify'
@@ -30,6 +30,8 @@ const page = () => {
 
   const [lockChanges, setLockChanges] = useState("");
 
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     if (userID != '') {
       if ('/user/' + userID != window.location.pathname) {
@@ -48,6 +50,8 @@ const page = () => {
         setFiles(files);
         setCodes(codes);
         setNotes(notes);
+
+        setLoading(false);
       });
     }
     if (userID != '') {
@@ -81,6 +85,7 @@ const page = () => {
   }
 
   const handleLock = async (id: string, status: boolean) => {
+    setLoading(true);
     if (selectedTab == 'f') {
       const { error: dbError } = await supabase
         .from('uploads')
@@ -91,14 +96,13 @@ const page = () => {
         console.error('Error storing file metadata:', dbError.message);
       }
     }
-    const userId = session?.user?.email?.split('@')[0].replace('.', '_').replace('/', '_');
     await fetch(`/api/store/user/lock`, {
       method: "POST",
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        userId,
+        userId: userID,
         id,
         status,
         type: selectedTab == 'f' ? 'files' : selectedTab == 'c' ? 'codes' : 'notes'
@@ -106,6 +110,37 @@ const page = () => {
     }).then(async resp => {
       if (await resp.text() == 'done') {
         toast.success(status ? 'Locked' : 'Unlocked');
+        setLockChanges(id + status);
+      }
+    })
+  }
+
+
+  const handleDelete = async (id: string) => {
+    setLoading(true);
+    if (selectedTab == 'f') {
+      const { error: dbError } = await supabase
+        .from('uploads')
+        .delete()
+        .eq('id', id);
+
+      if (dbError) {
+        console.error('Error storing file metadata:', dbError.message);
+      }
+    }
+    await fetch(`/api/store/user/delete`, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        userId: userID,
+        id,
+        type: selectedTab == 'f' ? 'files' : selectedTab == 'c' ? 'codes' : 'notes'
+      })
+    }).then(async (resp) => {
+      if (await resp.text() == 'done') {
+        toast.error('Deleted');
         setLockChanges(id + status);
       }
     })
@@ -124,26 +159,26 @@ const page = () => {
           />}
           <LogoutButton />
         </div>
-        <div className='w-full h-[85vh] p-10 outline-dashed overflow-hidden rounded-lg bg-black outline-gray-600 transition-all'>
-          <div className='w-full h-auto flex justify-start gap-5 p-5 select-none'>
-            <span onClick={() => setSelectedTab('f')} className={`py-1 px-5 cursor-pointer transition-all border hover:scale-105 rounded-full ${selectedTab == 'f' ? 'bg-neutral-100 text-black border-gray-100 hover:border-gray-500' : 'bg-gray-900 text-white border-gray-800 hover:border-gray-500'}`}>Files</span>
-            <span onClick={() => setSelectedTab('c')} className={`py-1 px-5 cursor-pointer transition-all border hover:scale-105 rounded-full ${selectedTab == 'c' ? 'bg-neutral-100 text-black border-gray-100 hover:border-gray-500' : 'bg-gray-900 text-white border-gray-800 hover:border-gray-500'}`}>Code Snippets</span>
-            <span onClick={() => setSelectedTab('n')} className={`py-1 px-5 cursor-pointer transition-all border hover:scale-105 rounded-full ${selectedTab == 'n' ? 'bg-neutral-100 text-black border-gray-100 hover:border-gray-500' : 'bg-gray-900 text-white border-gray-800 hover:border-gray-500'}`}>Notes</span>
+        <div className={`w-full h-[85vh] p-10 max-sm:p-5 ${loading && "cursor-wait"} outline-dashed overflow-hidden rounded-lg bg-black outline-gray-600 transition-all`}>
+          <div className='w-full h-auto flex justify-start gap-5 p-5 max-sm:p-0 select-none'>
+            <span onClick={() => setSelectedTab('f')} className={`py-1 px-5 max-sm:h-fit cursor-pointer transition-all border hover:scale-105 rounded-full ${selectedTab == 'f' ? 'bg-neutral-100 text-black border-gray-100 hover:border-gray-500' : 'bg-gray-900 text-white border-gray-800 hover:border-gray-500'}`}>Files</span>
+            <span onClick={() => setSelectedTab('c')} className={`py-1 px-5 max-sm:h-fit cursor-pointer transition-all border hover:scale-105 rounded-full ${selectedTab == 'c' ? 'bg-neutral-100 text-black border-gray-100 hover:border-gray-500' : 'bg-gray-900 text-white border-gray-800 hover:border-gray-500'}`}>Code {window.innerWidth > 500 && 'Snippets'}</span>
+            <span onClick={() => setSelectedTab('n')} className={`py-1 px-5 max-sm:h-fit cursor-pointer transition-all border hover:scale-105 rounded-full ${selectedTab == 'n' ? 'bg-neutral-100 text-black border-gray-100 hover:border-gray-500' : 'bg-gray-900 text-white border-gray-800 hover:border-gray-500'}`}>Notes</span>
           </div>
-          <div className='w-full grid grid-cols-3 gap-10 overflow-y-auto p-5 pt-10'>
+          <div className={`w-full grid grid-cols-3 max-sm:grid-cols-1 gap-10 max-sm:gap-5 overflow-y-auto p-5 max-sm:px-0 pt-10 ${loading && "pointer-events-none"}`}>
             {
               selectedTab == 'f' && files.length > 0 && files.map((file) => {
-                return <Item key={file.name + file.id} item={file} currentTab={selectedTab} handleShare={handleShare} handleLock={handleLock} />
+                return <Item key={file.name + file.id} item={file} currentTab={selectedTab} handleShare={handleShare} handleLock={handleLock} handleDelete={handleDelete} />
               })
             }
             {
               selectedTab == 'c' && codes.length > 0 && codes.map((code) => {
-                return <Item key={code.name + code.id} item={code} currentTab={selectedTab} handleShare={handleShare} handleLock={handleLock} />
+                return <Item key={code.name + code.id} item={code} currentTab={selectedTab} handleShare={handleShare} handleLock={handleLock} handleDelete={handleDelete} />
               })
             }
             {
               selectedTab == 'n' && notes.length > 0 && notes.map((note) => {
-                return <Item key={note.name + note.id} item={note} currentTab={selectedTab} handleShare={handleShare} handleLock={handleLock} />
+                return <Item key={note.name + note.id} item={note} currentTab={selectedTab} handleShare={handleShare} handleLock={handleLock} handleDelete={handleDelete} />
               })
             }
           </div>
@@ -154,7 +189,7 @@ const page = () => {
             animate={{ x: 0 }}
             exit={{ x: "100vh" }}
             transition={{ duration: 0.5 }}
-            className="flex absolute bottom-20 right-20 z-50 p-5 max-sm:top-24 max-sm:right-1 flex-col items-center justify-center border border-gray-300 gap-2 bg-gray-800 rounded-xl">
+            className="flex absolute bottom-20 right-20 z-50 p-5 max-sm:right-0 max-sm:bottom-0 max-sm:w-full flex-col items-center justify-center border border-gray-300 gap-2 bg-gray-800 rounded-xl">
             <div className='flex relative flex-col items-center justify-center gap-2 bg-gray-800 p-5 rounded-xl'>
               <img className="rounded-md" src={qrcode} alt="QR Code" />
               <p className='text-gray-300'>Scan the QR code to access this media .</p>
@@ -214,19 +249,19 @@ const page = () => {
 }
 
 
-const Item = ({ item, currentTab, handleShare, handleLock }: any) => {
+const Item = ({ item, currentTab, handleShare, handleLock, handleDelete }: any) => {
 
-  return <div className='w-full group cursor-pointer flex border transition-all overflow-hidden
+  return <div className='w-full group cursor-pointer flex max-sm:flex-col max-sm:gap-5 border transition-all overflow-hidden
   p-5 rounded-tl-xl rounded-br-3xl select-none  px-5 hover:shadow-gray-900 shadow-xl text-white justify-between' >
     <p className=' max-w-[50%] truncate'>{item.name} {(currentTab == 'c' || currentTab == 'n') && '_' + item.id}</p>
-    <div className='w-fit hidden gap-8 group-hover:flex transition-all'>
+    <div className='w-fit hidden gap-5 group-hover:flex max-sm:flex max-sm:justify-end max-sm:w-full transition-all'>
       {currentTab != 'f' ? <motion.span initial={{ y: 10 }} whileInView={{ y: 0 }} whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.95 }}
         onClick={() => {
-          window.location.href = `/${currentTab == 'c' ? 'code' : 'notes'}/${item.id}`
+          window.open(`/${currentTab == 'c' ? 'code' : 'notes'}/${item.id}`);
         }}>
         <IconEdit color='white' />
       </motion.span> :
-        <motion.span initial={{ y: 10 }} whileInView={{ y: 0 }} onClick={() => window.location.href = `/file/${item.id}`}
+        <motion.span initial={{ y: 10 }} whileInView={{ y: 0 }} onClick={() => window.open(`/file/${item.id}`)}
           whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.95 }}>
           <IconDownload color='white' />
         </motion.span>}
@@ -238,6 +273,11 @@ const Item = ({ item, currentTab, handleShare, handleLock }: any) => {
 
       <motion.span onClick={() => handleLock(item.id, !item.lock)} initial={{ y: 30 }} whileInView={{ y: 0 }} whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.95 }}>
         {item.lock ? <IconLock color='white' /> : <IconLockOpen2 color='white' />}
+      </motion.span>
+
+      <motion.span initial={{ y: 40 }} whileInView={{ y: 0 }} onClick={() => handleDelete(item.id)}
+        whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.95 }}>
+        <IconTrash color='white' />
       </motion.span>
     </div>
   </div >
@@ -252,7 +292,7 @@ const LogoutButton = () => {
     opacity: 1
   }}
     whileTap={{ scale: 0.90 }}
-    className='flex gap-2 align-middle h-fit cursor-pointer p-2 px-5 top-5 left-3 rounded-full bg-gray-100 border transition-all hover:border-indigo-500'
+    className='flex gap-2 align-middle h-fit cursor-pointer max-sm:-mt-2 p-2 px-5 top-5 left-3 rounded-full bg-gray-100 border transition-all hover:border-indigo-500'
     onClick={() => {
       const conf = confirm('Do you want to logout ?');
       if (conf.valueOf()) {
