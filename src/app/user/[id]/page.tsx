@@ -275,7 +275,12 @@ const Item = ({ item, currentTab, handleShare, handleLock, handleDelete }: any) 
         {item.lock ? <IconLock color='white' /> : <IconLockOpen2 color='white' />}
       </motion.span>
 
-      <motion.span initial={{ y: 40 }} whileInView={{ y: 0 }} onClick={() => handleDelete(item.id)}
+      <motion.span initial={{ y: 40 }} whileInView={{ y: 0 }} onClick={() => {
+        const resp = confirm('Do you want to delete this item ?');
+        if (resp) {
+          handleDelete(item.id)
+        }
+      }}
         whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.95 }}>
         <IconTrash color='white' />
       </motion.span>
