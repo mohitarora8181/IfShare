@@ -45,17 +45,17 @@ const page = () => {
     }
     useEffect(() => {
         fetchFile();
-        document.addEventListener('mousemove', e => {
-            const cursor: HTMLElement = document.querySelector('.cursorGlow')!;
-            cursor.style.left = e.pageX + 'px';
-            cursor.style.top = e.pageY + 'px';
-        });
+        // document.addEventListener('mousemove', e => {
+        //     const cursor: HTMLElement = document.querySelector('.cursorGlow')!;
+        //     cursor.style.left = e.pageX + 'px';
+        //     cursor.style.top = e.pageY + 'px';
+        // });
     }, [])
 
     return (
-        <div className="flex flex-col items-center justify-center w-full h-full bg-black absolute animate-borderPulse">
-            <StarsBackground />
-            <div className="cursorGlow max-sm:hidden"></div>
+        <div className="flex flex-col items-center justify-center w-full h-full bg-black absolute">
+            {/* <StarsBackground /> */}
+            {/* <div className="cursorGlow max-sm:hidden"></div> */}
             <div className="relative w-full mt-10 max-w-xl mx-auto max-sm:px-5">
                 {file &&
                     <>
