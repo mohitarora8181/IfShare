@@ -3,12 +3,20 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as fabric from 'fabric';
 import { GrRedo, GrUndo } from 'react-icons/gr';
+import { IconRotateRectangle } from '@tabler/icons-react';
+import { CircleBackslashIcon, SquareIcon } from '@radix-ui/react-icons';
+import { FaCircle, FaSquare, FaSquareBehance, FaSquareFull } from 'react-icons/fa6';
+import { color } from 'framer-motion';
 
 const Whiteboard = () => {
   const canvasRef = useRef<fabric.Canvas | null>(null);
   const [activeTool, setActiveTool] = useState<'draw' | 'erase' | 'none'>('draw');
   const [history, setHistory] = useState<fabric.Object[]>([]);
   const [redoStack, setRedoStack] = useState<fabric.Object[]>([]);
+  const [arrowType, setArrowType] = useState<'straight' | 'curved' | 'angled'>('straight');
+  const [brushW, setBrushW] = useState<number>(5);
+  const [colorW, setColorW] = useState<string>("#000000");
+
 
   useEffect(() => {
     const canvasElement = document.getElementById('whiteboard');
@@ -91,8 +99,8 @@ const Whiteboard = () => {
 
     const dataURL = canvas.toDataURL({
       format: 'png',
-      quality: 1,  
-      multiplier: 1, 
+      quality: 1,
+      multiplier: 1,
     });
 
     const link = document.createElement('a');
@@ -161,6 +169,96 @@ const Whiteboard = () => {
     setRedoStack((prevRedoStack) => {
       return prevRedoStack.slice(0, -1);
     });
+
+
+  };
+
+  const updateBrush = (size: number, color: string) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    if (canvas.freeDrawingBrush) {
+      canvas.freeDrawingBrush.color = color;
+      canvas.freeDrawingBrush.width = size;
+    }
+  };
+
+  const addShape = (shape: 'rect' | 'circle') => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    let shapeObject: any;
+
+    if (shape === 'rect') {
+      shapeObject = new fabric.Rect({
+        left: 100,
+        top: 100,
+        width: 100,
+        height: 100,
+        fill: 'white',
+        stroke: "black",
+
+      });
+    } else if (shape === 'circle') {
+      shapeObject = new fabric.Circle({
+        left: 150,
+        top: 150,
+        radius: 50,
+        fill: "white",
+        stroke: "black",
+        borderColor: "black",
+        borderScaleFactor: 2
+      });
+    }
+
+    canvas.add(shapeObject);
+    setHistory((prevHistory) => [...prevHistory, shapeObject]);
+  };
+
+
+
+  const clearCanvas = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    canvas.clear();
+
+    canvas.backgroundColor = '#ffffff';
+    canvas.renderAll();
+  };
+
+
+  const drawArrow = (type: 'straight' | 'curved' | 'angled') => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    let arrowPath: string;
+
+    switch (type) {
+      case 'straight':
+        arrowPath = 'M 0 0 L 200 0 L 190 -10 M 200 0 L 190 10';
+        break;
+      case 'curved':
+        arrowPath = 'M 0 0 C 50 100, 150 100, 200 0 L 190 -10 M 200 0 L 190 10';
+        break;
+      case 'angled':
+        arrowPath = 'M 0 0 L 150 0 L 150 -30 L 200 0 L 150 30 Z';
+        break;
+      default:
+        arrowPath = 'M 0 0 L 200 0 L 190 -10 M 200 0 L 190 10';
+        break;
+    }
+
+    const arrow = new fabric.Path(arrowPath, {
+      fill: 'transparent',
+      stroke: 'black',
+      strokeWidth: 2,
+      left: 100,
+      top: 100,
+    });
+
+    canvas.add(arrow);
+    setHistory((prevHistory) => [...prevHistory, arrow]);
   };
 
   return (
@@ -192,7 +290,7 @@ const Whiteboard = () => {
         Disable All
       </button>
       <button onClick={undo} className="absolute top-7 left-[22rem] font-anton bg-gray-800 text-white px-3 py-1 rounded-md">
-      <GrUndo/>
+        <GrUndo />
       </button>
       <button onClick={redo} className="absolute top-7 left-[25rem] font-anton bg-gray-800 text-white px-3 py-1 rounded-md">
         <GrRedo />
@@ -203,6 +301,70 @@ const Whiteboard = () => {
       <div className="absolute top-2 translate-x-[-50%] font-bubble text-3xl translate-y-1/2 left-1/2 text-black">
         Whiteboard
       </div>
+
+      <div className="absolute top-16 left-6 flex space-x-4">
+        <label>
+          Brush Size:
+          <input
+            type="number"
+            value={brushW} 
+            defaultValue={5}
+            onChange={(e: any) => {
+              const value = Number(e.target.value); 
+              setBrushW(value); 
+              updateBrush(value, colorW);
+            }}
+            className="ml-2 px-2 py-1 border rounded"
+          />
+        </label>
+
+        <label>
+          Brush Color:
+          <input
+            type="color"
+            value={colorW}
+            defaultValue="#000000"
+            onChange={(e) => {
+              const value = e.target.value ;
+              setColorW(value);
+              updateBrush(brushW, value)
+            }}
+            className="ml-2"
+          />
+        </label>
+      </div>
+
+      <button onClick={() => addShape('rect')} className="absolute top-7 left-[30rem] font-anton text-black px-3 py-1 rounded-md">
+        <SquareIcon />
+      </button>
+      <button onClick={() => addShape('circle')} className="absolute top-7 left-[33rem] font-anton  text-black px-3 py-1 rounded-md">
+        <FaCircle />
+      </button>
+
+      <button
+        onClick={clearCanvas}
+        className="px-3 py-1 bg-red-500 text-white rounded absolute bottom-10 right-10"
+      >
+        Clear Canvas
+      </button>
+
+      <select
+        value={arrowType}
+        onChange={(e) => setArrowType(e.target.value as 'straight' | 'curved' | 'angled')}
+        className="px-6 py-1 font-bubble rounded-md absolute bottom-4 text-white bg-zinc-900 left-10"
+      >
+        <option value="straight">Straight Arrow</option>
+        <option value="curved">Curved Arrow</option>
+        <option value="angled">Angled Arrow</option>
+      </select>
+
+      <button
+        onClick={() => drawArrow(arrowType)}
+        className="px-3 py-1 mt-2 rounded-md bg-zinc-200 absolute bottom-4 left-80 font-bubble to-green-400"
+      >
+        Draw Arrow
+      </button>
+
     </div>
   );
 };
