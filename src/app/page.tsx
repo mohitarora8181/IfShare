@@ -62,7 +62,7 @@ const HomePage = () => {
     },
   
     {
-      title: "Whieboard",
+      title: "Whiteboard",
       icon: (
         <MdOutlineDraw className="h-full w-full text-white dark:text-neutral-300" />
       ),
