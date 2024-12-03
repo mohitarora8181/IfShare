@@ -5,8 +5,9 @@ import * as fabric from 'fabric';
 import { GrRedo, GrUndo } from 'react-icons/gr';
 import { IconRotateRectangle } from '@tabler/icons-react';
 import { CircleBackslashIcon, SquareIcon } from '@radix-ui/react-icons';
-import { FaCircle, FaSquare, FaSquareBehance, FaSquareFull } from 'react-icons/fa6';
-import { color } from 'framer-motion';
+import { FaCircle, FaGripLinesVertical, FaLine, FaLinesLeaning, FaSquare, FaSquareBehance, FaSquareFull } from 'react-icons/fa6';
+import { BsGrid3X3GapFill } from "react-icons/bs";
+import { MdStickyNote2 } from 'react-icons/md';
 
 const Whiteboard = () => {
   const canvasRef = useRef<fabric.Canvas | null>(null);
@@ -16,7 +17,7 @@ const Whiteboard = () => {
   const [arrowType, setArrowType] = useState<'straight' | 'curved' | 'angled'>('straight');
   const [brushW, setBrushW] = useState<number>(5);
   const [colorW, setColorW] = useState<string>("#000000");
-
+  const [isGridVisible, setIsGridVisible] = useState(false); 
 
   useEffect(() => {
     const canvasElement = document.getElementById('whiteboard');
@@ -261,6 +262,117 @@ const Whiteboard = () => {
     setHistory((prevHistory) => [...prevHistory, arrow]);
   };
 
+
+  const drawLine = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    // if(confirm("disable drawing mode ?")){
+    //   setActiveTool('none');
+    // } 
+    
+
+    let line: fabric.Line | null = null;
+  
+    canvas.on('mouse:down', (opt) => {
+      const pointer = canvas.getPointer(opt.e);
+      line = new fabric.Line([pointer.x, pointer.y, pointer.x, pointer.y], {
+        stroke: colorW,
+        strokeWidth: brushW,
+      });
+      canvas.add(line);
+    });
+  
+    canvas.on('mouse:move', (opt) => {
+      if (!line) return;
+      const pointer = canvas.getPointer(opt.e);
+      line.set({ x2: pointer.x, y2: pointer.y });
+      canvas.renderAll();
+    });
+  
+    canvas.on('mouse:up', () => {
+      setHistory((prevHistory : any) => [...prevHistory, line]);
+      line = null;
+    });
+
+  };
+
+  const addStickyNote = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+  
+    const stickyNote = new fabric.Rect({
+      left: 100,
+      top: 100,
+      width: 150,
+      height: 100,
+      fill: '#f3f438',
+      stroke: 'black',
+      strokeWidth: 1,
+    });
+  
+    const text = new fabric.Textbox('Note', {
+      left: 110,
+      top: 110,
+      width: 130,
+      fontSize: 14,
+      fontFamily: 'Arial',
+      textAlign: 'center',
+      
+    });
+  
+    const group = new fabric.Group([stickyNote, text]);
+    canvas.add(group);
+  
+    setHistory((prevHistory) => [...prevHistory, group]);
+  };
+
+
+const toggleGrid = () => {
+  const canvas = canvasRef.current;
+  if (!canvas) return;
+
+  const gridSize = 25;
+
+  if(isGridVisible) {
+    console.log("hahah");
+    
+    const objectsToRemove = canvas.getObjects().filter(obj => obj.type === 'line' && obj.stroke === '#ccc');
+    objectsToRemove.forEach(obj => canvas.remove(obj));
+    setIsGridVisible(false); 
+    canvas.renderAll();
+  } else {
+    console.log("hahahahahhahaha");
+    setIsGridVisible(true);
+    console.log(isGridVisible);
+
+    
+    for (let i = 0; i < canvas.width!; i += gridSize) {
+      canvas.add(
+        new fabric.Line([i, 0, i, canvas.height!], {
+          stroke: '#ccc',
+          selectable: false,
+          evented: false,
+        })
+      );
+    }
+    for (let j = 0; j < canvas.height!; j += gridSize) {
+      canvas.add(
+        new fabric.Line([0, j, canvas.width!, j], {
+          stroke: '#ccc',
+          selectable: false,
+          evented: false,
+        })
+      );
+    }
+    canvas.renderAll(); 
+  }
+};
+
+  
+  
+  
+
   return (
     <div className="w-full h-screen relative">
       <canvas
@@ -364,6 +476,12 @@ const Whiteboard = () => {
       >
         Draw Arrow
       </button>
+
+      <button onClick={drawLine} className="absolute top-[4.3rem] left-[32.3rem]"> <FaGripLinesVertical /> </button>
+
+      <button onClick={addStickyNote} className="absolute top-7 text-xl left-[37rem]"><MdStickyNote2/></button>
+
+      <button onClick={toggleGrid} className="absolute top-[4.25rem] left-[35.5rem]"> <BsGrid3X3GapFill /> </button>
 
     </div>
   );
