@@ -455,7 +455,7 @@ const toggleGrid = () => {
 
       <button
         onClick={clearCanvas}
-        className="px-3 py-1 bg-red-500 text-white rounded absolute bottom-10 right-10"
+        className="px-3 py-1 bg-red-500 text-white rounded absolute bottom-4 right-10"
       >
         Clear Canvas
       </button>
