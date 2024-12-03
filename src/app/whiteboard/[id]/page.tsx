@@ -8,6 +8,8 @@ import { CircleBackslashIcon, SquareIcon } from '@radix-ui/react-icons';
 import { FaCircle, FaGripLinesVertical, FaLine, FaLinesLeaning, FaSquare, FaSquareBehance, FaSquareFull } from 'react-icons/fa6';
 import { BsGrid3X3GapFill } from "react-icons/bs";
 import { MdStickyNote2 } from 'react-icons/md';
+import { useRouter } from 'next/router';
+import { useParams, useSearchParams } from 'next/navigation';
 
 const Whiteboard = () => {
   const canvasRef = useRef<fabric.Canvas | null>(null);
@@ -17,7 +19,10 @@ const Whiteboard = () => {
   const [arrowType, setArrowType] = useState<'straight' | 'curved' | 'angled'>('straight');
   const [brushW, setBrushW] = useState<number>(5);
   const [colorW, setColorW] = useState<string>("#000000");
-  const [isGridVisible, setIsGridVisible] = useState(false); 
+  const [isGridVisible, setIsGridVisible] = useState(false);
+
+  const { id } = useParams();
+  console.log(id);
 
   useEffect(() => {
     const canvasElement = document.getElementById('whiteboard');
@@ -270,10 +275,10 @@ const Whiteboard = () => {
     // if(confirm("disable drawing mode ?")){
     //   setActiveTool('none');
     // } 
-    
+
 
     let line: fabric.Line | null = null;
-  
+
     canvas.on('mouse:down', (opt) => {
       const pointer = canvas.getPointer(opt.e);
       line = new fabric.Line([pointer.x, pointer.y, pointer.x, pointer.y], {
@@ -282,16 +287,16 @@ const Whiteboard = () => {
       });
       canvas.add(line);
     });
-  
+
     canvas.on('mouse:move', (opt) => {
       if (!line) return;
       const pointer = canvas.getPointer(opt.e);
       line.set({ x2: pointer.x, y2: pointer.y });
       canvas.renderAll();
     });
-  
+
     canvas.on('mouse:up', () => {
-      setHistory((prevHistory : any) => [...prevHistory, line]);
+      setHistory((prevHistory: any) => [...prevHistory, line]);
       line = null;
     });
 
@@ -300,7 +305,7 @@ const Whiteboard = () => {
   const addStickyNote = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-  
+
     const stickyNote = new fabric.Rect({
       left: 100,
       top: 100,
@@ -310,7 +315,7 @@ const Whiteboard = () => {
       stroke: 'black',
       strokeWidth: 1,
     });
-  
+
     const text = new fabric.Textbox('Note', {
       left: 110,
       top: 110,
@@ -318,60 +323,78 @@ const Whiteboard = () => {
       fontSize: 14,
       fontFamily: 'Arial',
       textAlign: 'center',
-      
+
     });
-  
+
     const group = new fabric.Group([stickyNote, text]);
     canvas.add(group);
-  
+
     setHistory((prevHistory) => [...prevHistory, group]);
   };
 
 
-const toggleGrid = () => {
-  const canvas = canvasRef.current;
-  if (!canvas) return;
+  const toggleGrid = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
 
-  const gridSize = 25;
+    const gridSize = 25;
 
-  if(isGridVisible) {
-    console.log("hahah");
-    
-    const objectsToRemove = canvas.getObjects().filter(obj => obj.type === 'line' && obj.stroke === '#ccc');
-    objectsToRemove.forEach(obj => canvas.remove(obj));
-    setIsGridVisible(false); 
-    canvas.renderAll();
-  } else {
-    console.log("hahahahahhahaha");
-    setIsGridVisible(true);
-    console.log(isGridVisible);
+    if (isGridVisible) {
+      console.log("hahah");
 
-    
-    for (let i = 0; i < canvas.width!; i += gridSize) {
-      canvas.add(
-        new fabric.Line([i, 0, i, canvas.height!], {
-          stroke: '#ccc',
-          selectable: false,
-          evented: false,
-        })
-      );
+      const objectsToRemove = canvas.getObjects().filter(obj => obj.type === 'line' && obj.stroke === '#ccc');
+      objectsToRemove.forEach(obj => canvas.remove(obj));
+      setIsGridVisible(false);
+      canvas.renderAll();
+    } else {
+      console.log("hahahahahhahaha");
+      setIsGridVisible(true);
+      console.log(isGridVisible);
+
+
+      for (let i = 0; i < canvas.width!; i += gridSize) {
+        canvas.add(
+          new fabric.Line([i, 0, i, canvas.height!], {
+            stroke: '#ccc',
+            selectable: false,
+            evented: false,
+          })
+        );
+      }
+      for (let j = 0; j < canvas.height!; j += gridSize) {
+        canvas.add(
+          new fabric.Line([0, j, canvas.width!, j], {
+            stroke: '#ccc',
+            selectable: false,
+            evented: false,
+          })
+        );
+      }
+      canvas.renderAll();
     }
-    for (let j = 0; j < canvas.height!; j += gridSize) {
-      canvas.add(
-        new fabric.Line([0, j, canvas.width!, j], {
-          stroke: '#ccc',
-          selectable: false,
-          evented: false,
-        })
-      );
-    }
-    canvas.renderAll(); 
-  }
-};
+  };
 
   
   
-  
+
+  const saveCanvas = async () => {
+    const canvasJSON = canvasRef.current?.toJSON();
+    console.log(id);
+    
+    await fetch('/api/whiteboard', {
+      method: 'POST',
+      body: JSON.stringify({ id , img: canvasJSON }),
+      headers: { 'Content-Type': 'application/json' }
+    });
+
+    alert("Board Saved!!");
+  };
+
+  const loadCanvas = async () => {
+    const response = await fetch('/api/whiteboard?id=unique_id');
+    const data = await response.json();
+    canvasRef.current?.loadFromJSON(data.img, canvasRef.current.renderAll.bind(canvasRef.current));
+  };
 
   return (
     <div className="w-full h-screen relative">
@@ -408,7 +431,7 @@ const toggleGrid = () => {
         <GrRedo />
       </button>
       <button onClick={exportAsImage} className="absolute top-6 right-10 font-anton bg-zinc-900 text-white px-3 py-1 rounded-md">Export</button>
-      <button onClick={addText} className="absolute top-6 right-[10rem] font-anton bg-gradient-to-r from-cyan-500 to-blue-400 text-white px-3 py-1 rounded-md">Add Text</button>
+      <button onClick={addText} className="absolute top-6 right-[12rem] font-anton bg-gradient-to-r from-cyan-500 to-blue-400 text-white px-3 py-1 rounded-md">Add Text</button>
 
       <div className="absolute top-2 translate-x-[-50%] font-bubble text-3xl translate-y-1/2 left-1/2 text-black">
         Whiteboard
@@ -419,11 +442,11 @@ const toggleGrid = () => {
           Brush Size:
           <input
             type="number"
-            value={brushW} 
+            value={brushW}
             defaultValue={5}
             onChange={(e: any) => {
-              const value = Number(e.target.value); 
-              setBrushW(value); 
+              const value = Number(e.target.value);
+              setBrushW(value);
               updateBrush(value, colorW);
             }}
             className="ml-2 px-2 py-1 border rounded"
@@ -437,7 +460,7 @@ const toggleGrid = () => {
             value={colorW}
             defaultValue="#000000"
             onChange={(e) => {
-              const value = e.target.value ;
+              const value = e.target.value;
               setColorW(value);
               updateBrush(brushW, value)
             }}
@@ -479,9 +502,17 @@ const toggleGrid = () => {
 
       <button onClick={drawLine} className="absolute top-[4.3rem] left-[32.3rem]"> <FaGripLinesVertical /> </button>
 
-      <button onClick={addStickyNote} className="absolute top-7 text-xl left-[37rem]"><MdStickyNote2/></button>
+      <button onClick={addStickyNote} className="absolute top-7 text-xl left-[37rem]"><MdStickyNote2 /></button>
 
       <button onClick={toggleGrid} className="absolute top-[4.25rem] left-[35.5rem]"> <BsGrid3X3GapFill /> </button>
+
+      <button
+        onClick={saveCanvas}
+        className="absolute top-6 right-[7.5rem] px-3 py-1 rounded-md bg-gradient-to-r from-zinc-500 to-gray-900 text-white font-anton"
+      >
+        Save
+      </button>
+
 
     </div>
   );
