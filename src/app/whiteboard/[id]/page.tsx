@@ -390,12 +390,6 @@ const Whiteboard = () => {
     alert("Board Saved!!");
   };
 
-  const loadCanvas = async () => {
-    const response = await fetch('/api/whiteboard?id=unique_id');
-    const data = await response.json();
-    canvasRef.current?.loadFromJSON(data.img, canvasRef.current.renderAll.bind(canvasRef.current));
-  };
-
   return (
     <div className="w-full h-screen relative">
       <canvas
