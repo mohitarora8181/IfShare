@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# IfShare
 
-## Getting Started
+## Introduction
+IfShare is a web application designed to facilitate sharing of information. It is built primarily using TypeScript, with additional usage of CSS and JavaScript. The application is hosted on [Vercel](https://ifshare.vercel.app).
 
-First, run the development server:
+## Repository Contents
+- **src/**: Contains the source code of the application.
+- **public/**: Contains static assets such as images and HTML files.
+- **README.md**: This file, providing an overview of the IfShare project.
+- **package.json**: Contains metadata about the project and its dependencies.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Setup and Usage
+To set up and run the IfShare application locally, follow these steps:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. **Clone the repository**:
+   ```sh
+   git clone https://github.com/mohitarora8181/IfShare.git
+   cd IfShare
+   ```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+2. **Install dependencies**:
+   ```sh
+   npm install
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+3. **Run the development server**:
+   ```sh
+   npm run dev
+   ```
 
-## Learn More
+4. **Build the application**:
+   ```sh
+   npm run build
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+5. **Start the production server**:
+   ```sh
+   npm start
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Features
+- If a user is logged in, any files, notes, and code shared will be saved directly into the cloud session associated with their email ID.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Contributing
+If you'd like to contribute to IfShare, please fork the repository and use a feature branch. Pull requests are warmly welcome.
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## License
+This project is open-source and available under the MIT License.
